@@ -1,7 +1,8 @@
 title: yuvicc
 description: >- # this means to ignore newlines until "baseurl:"
   Bitcoin Core developer working on libbitcoinkernel and java-bitcoinkernel bindings.
-  Summer of Bitcoin '24 & '25 participant. NIT Durgapur graduate.
+
+  PGP: 0F78 77ED BA29 0958 5996 1FC0 82A4 2715 E616 42E7
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: hey_yuvicc

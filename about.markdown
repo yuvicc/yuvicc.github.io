@@ -18,16 +18,16 @@ I'm actively contributing to Bitcoin Core, with a focus on:
 
 ### Summer of Bitcoin
 
-- **2025** - Worked on **bitcoinfuzz** under the mentorship of [brunoerg](https://github.com/brunoerg)
-- **2024** - Worked on **peer-observer** under the mentorship of [0xB10C](https://github.com/0xB10C)
+- **2025** - Worked on [**bitcoinfuzz**](https://github.com/bitcoinfuzz) under the mentorship of [brunoerg](https://github.com/brunoerg)
+- **2024** - Worked on [**peer-observer**](https://github.com/0xB10C/peer-observer) under the mentorship of [0xB10C](https://github.com/0xB10C)
 
 ## Education
 
-Graduated in 2025 with a Bachelor of Technology (BTech) from **National Institute of Technology Durgapur**.
+Graduated in 2025 with a Bachelor of Technology (BTech) from [**National Institute of Technology Durgapur**.](https://nitdgp.ac.in/)
 
 ## Connect
 
 - **GitHub**: [github.com/yuvicc](https://github.com/yuvicc)
 - **Twitter**: [@hey_yuvicc](https://twitter.com/hey_yuvicc)
 
-Feel free to reach out if you want to discuss Bitcoin development, libbitcoinkernel, or collaborate on open-source projects!
+Feel free to reach out if you want to discuss Bitcoin development, libbitcoinkernel, or collaborate on Bitcoin open-source projects!
