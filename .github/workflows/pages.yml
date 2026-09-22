@@ -1,12 +1,12 @@
-# Builds the Jekyll site and the Astro study site (served at /llvm/) into one
-# GitHub Pages artifact, deployed from the learn_llvm branch (not merged into master).
-# Requires Settings → Pages → Source: "GitHub Actions", and learn_llvm allowed in the
+# Builds the Jekyll site and both Astro study sites into one GitHub Pages artifact.
+# This branch is deployed directly and is not intended to merge into master.
+# Requires Settings → Pages → Source: "GitHub Actions", and learn_golang allowed in the
 # github-pages environment's deployment branch rules.
 name: Deploy site
 
 on:
   push:
-    branches: [learn_llvm]
+    branches: [learn_golang]
   workflow_dispatch:
 
 permissions:
@@ -40,7 +40,9 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: llvm-site/package-lock.json
+          cache-dependency-path: |
+            llvm-site/package-lock.json
+            go-site/package-lock.json
 
       - name: Build study site
         working-directory: llvm-site
@@ -50,10 +52,21 @@ jobs:
           npm run build
           npm run test:routes
 
+      - name: Build Go study site
+        working-directory: go-site
+        run: |
+          npm ci
+          npm test
+          npm run build
+          npm run test:routes
+          ./scripts/verify-solutions.sh
+
       - name: Combine outputs
         run: |
           test ! -e _site/llvm || { echo "_site/llvm already exists; refusing to overwrite"; exit 1; }
+          test ! -e _site/learn-go || { echo "_site/learn-go already exists; refusing to overwrite"; exit 1; }
           cp -r llvm-site/dist _site/llvm
+          cp -r go-site/dist _site/learn-go
 
       - uses: actions/upload-pages-artifact@v5
         with:

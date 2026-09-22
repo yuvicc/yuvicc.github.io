@@ -3,3 +3,6 @@ _site
 .jekyll-cache
 .jekyll-metadata
 vendor
+go-site/node_modules
+go-site/dist
+go-site/.astro

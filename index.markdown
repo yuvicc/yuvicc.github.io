@@ -5,4 +5,7 @@
 layout: home
 ---
 
-Currently working through [LLVM and Clang in 30 Study Days](/llvm/), a study plan and tracker toward a first Clang contribution.
+Currently studying:
+
+- [Go in 45 Days](/learn-go/) — from language fundamentals to a tested, shippable service.
+- [LLVM and Clang in 30 Study Days](/llvm/) — a study plan and tracker toward a first Clang contribution.

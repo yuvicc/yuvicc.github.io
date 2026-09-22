@@ -22,6 +22,7 @@ plugins:
 #
 exclude:
   - llvm-site/ # the Astro study site, built separately into /llvm/
+  - go-site/ # the Go study site, built separately into /learn-go/
 #   - .sass-cache/
 #   - .jekyll-cache/
 #   - gemfiles/
