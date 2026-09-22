@@ -1,0 +1,7 @@
+---
+import DayPage from '../../../components/DayPage.astro';
+import { days } from '../../../data/course';
+export function getStaticPaths() { return days.map((day) => ({ params: { id: day.id }, props: { day } })); }
+const { day } = Astro.props;
+---
+<DayPage day={day} focus="quiz" />

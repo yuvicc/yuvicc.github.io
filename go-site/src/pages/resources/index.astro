@@ -1,0 +1,10 @@
+---
+import Base from '../../layouts/Base.astro';
+import { resources } from '../../data/course';
+---
+<Base title="Resources" section="resources">
+  <header class="page-hero"><p class="eyebrow">Keep close</p><h1>A small, strong Go library.</h1><p>Official docs and proven guides, chosen for the course instead of an endless bookmark pile.</p></header>
+  <section class="resource-grid">
+    {resources.map((r) => <a class="resource" href={r.url} target="_blank" rel="noreferrer"><small>{r.type.toUpperCase()} ↗</small><h2>{r.title}</h2><div class="tags">{r.topics.map((t) => <span class="tag">{t}</span>)}</div></a>)}
+  </section>
+</Base>

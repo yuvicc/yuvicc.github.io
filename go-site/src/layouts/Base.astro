@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+import { STORAGE_KEY } from '../lib/progress';
+const { title, description = 'A practical, self-paced path from Go basics to a tested service.', section = '' } = Astro.props;
+const pageTitle = section === 'home' ? 'Go in 45 Days' : `${title} · Go in 45 Days`;
+const nav = [
+  ['roadmap', 'Roadmap', '/learn-go/roadmap/'],
+  ['resources', 'Resources', '/learn-go/resources/'],
+  ['progress', 'Progress', '/learn-go/progress/'],
+];
+---
+<!doctype html>
+<html lang="en" data-storage-key={STORAGE_KEY}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#09110e" />
+    <title>{pageTitle}</title>
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="icon" href="/learn-go/favicon.svg" type="image/svg+xml" />
+    <script is:inline define:vars={{ key: STORAGE_KEY }}>
+      document.documentElement.classList.add('js');
+      try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem(key) || '{}')?.settings?.theme || 'dark'; } catch { document.documentElement.dataset.theme = 'dark'; }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="/learn-go/" aria-label="Go in 45 Days home"><span class="go-mark">GO</span><span>in 45 days</span></a>
+      <nav aria-label="Main navigation">
+        {nav.map(([id, label, href]) => <a href={href} aria-current={section === id ? 'page' : undefined}>{label}</a>)}
+      </nav>
+      <button class="icon-button" type="button" data-theme-toggle aria-label="Switch color theme"><span data-theme-icon>☼</span></button>
+    </header>
+    <main id="main"><slot /></main>
+    <footer>
+      <div><span class="go-mark small">GO</span><p>Forty-five focused days. One production-ready mindset.</p></div>
+      <a href="https://go.dev/" rel="noreferrer">Go documentation ↗</a>
+    </footer>
+    <div class="sr-only" aria-live="polite" data-announcer></div>
+    <slot name="scripts" />
+    <script is:inline src="/learn-go/app.js"></script>
+  </body>
+</html>

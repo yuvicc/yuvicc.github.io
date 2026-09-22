@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import { days, weeks, dayUrl } from '../../data/course';
+---
+<Base title="Roadmap" section="roadmap">
+  <header class="page-hero"><p class="eyebrow">The full route</p><h1>From first principles to production.</h1><p>Nothing is locked. Follow the sequence or jump to the idea you need today.</p></header>
+  <label class="field">Search the roadmap <input type="search" data-roadmap-search placeholder="Try “append” or “testing” · shortcut /" /></label>
+  {weeks.map(([title, summary], i) => (
+    <section class="roadmap-week">
+      <header><span class="week-index">Week {String(i+1).padStart(2,'0')}</span><div><h2>{title}</h2><p>{summary}</p></div></header>
+      <div class="roadmap-days">
+        {days.filter((d) => d.week === i + 1).map((day) => <a class="roadmap-day" data-day={day.id} href={dayUrl(day.id)}><span class="num">{day.id.toUpperCase()}</span><div><h3>{day.title}</h3><p>{day.summary}</p></div><span class="pill">{day.kind}</span></a>)}
+      </div>
+    </section>
+  ))}
+</Base>

@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import type { Day } from '../data/course';
+import { questionsFor } from '../data/questions';
+const { day } = Astro.props as { day: Day; focus?: 'lesson' | 'quiz' };
+const questions = questionsFor(day);
+const project = day.kind === 'project' || day.kind === 'capstone';
+const buffer = day.kind === 'buffer';
+const snippets = day.id === '05' ? [
+`a := [3]int{1, 2, 3}\nb := a\nb[0] = 99\nfmt.Println(a, b) // [1 2 3] [99 2 3]`,
+`a := []int{1, 2, 3, 4}\nb := a[1:3]\nb[0] = 20\nfmt.Println(a) // [1 20 3 4]`,
+`s := make([]int, 0, 2)\ns = append(s, 10, 20)\nt := append(s, 30)\nfmt.Println(len(t), cap(t)) // 3 4`,
+] : [
+`package main\n\nimport "fmt"\n\nfunc main() {\n\tfmt.Println("${day.title}")\n}`,
+`// Make the smallest behavior observable.\n// Then add one edge case and run it again.`,
+`// Local workflow\n// gofmt -w .\n// go test ./...\n// go vet ./...`,
+];
+---
+<Base title={`${day.id.toUpperCase()} — ${day.title}`} section="days">
+  <div class="lesson-shell">
+    <aside class="lesson-aside" aria-label="On this page"><p class="lesson-meta">Day {day.id.toUpperCase()}</p><a href="#learn">Learn</a><a href="#try">Try</a><a href="#quiz">Quiz</a><a href="#code">Code</a><a href="#reflect">Reflect</a><a href="/learn-go/roadmap/">← Full roadmap</a></aside>
+    <article class="lesson">
+      <header><p class="lesson-meta">Week {day.week} · {day.kind}</p><h1>{day.title}</h1><p class="summary">{day.summary}</p><div class="tags">{day.topics.map((x)=><span class="tag">{x}</span>)}</div></header>
+      <section class="objectives"><h2>Today’s outcome</h2><ul><li>Explain the central idea in your own words.</li><li>Predict the behavior of a small example before running it.</li><li>{project ? 'Finish the acceptance checklist with the real Go toolchain.' : buffer ? 'Choose and close the highest-value gap in your progress.' : 'Implement the warm-up and core tasks, then verify them.'}</li></ul></section>
+
+      <section id="learn">
+        <h2>{buffer ? 'Use the day where it matters' : project ? 'Turn the week into a program' : 'Build the mental model first'}</h2>
+        {day.id === '05' ? <>
+          <p>An array owns a fixed number of values. Its length is part of its type, so <code>[3]int</code> and <code>[4]int</code> are different types. Assignment copies the whole array. This is predictable, but most Go APIs need a view whose length can change. That view is a slice.</p>
+          <p>A slice is a small descriptor containing a pointer to an underlying array, a length, and a capacity. Copying a slice copies that descriptor, not its elements. Two slices can therefore observe and change the same storage. This one fact explains most slice surprises.</p>
+          <div class="callout"><strong>Gotcha — append may or may not detach.</strong><p>If capacity remains, append writes into the shared array. If it is exhausted, append allocates another array. Never make correctness depend on guessing the growth strategy.</p></div>
+          <h3>Length, capacity and full slice expressions</h3><p>Length is the range you can index now. Capacity is how far the slice can grow before it needs new storage. The expression <code>a[low:high:max]</code> limits capacity to <code>max-low</code>; this can deliberately force a later append to detach.</p>
+          <h3>Nil, empty and copied slices</h3><p>A nil slice and an empty non-nil slice both have length zero and work with append and range. They can encode differently at an API boundary, so choose intentionally. To detach data, allocate and <code>copy</code>, use <code>slices.Clone</code>, or append into a fresh zero-length slice.</p>
+        </> : <>
+          <p>Go rewards a small number of ideas applied consistently: keep ownership clear, make failure explicit, and prefer code whose behavior is easy to test. Today’s focus is <strong>{day.title.toLowerCase()}</strong>. Begin by connecting it to code you already understand, then isolate one behavior at a time.</p>
+          <p>{day.summary} Read the example slowly. Predict the result before running it, name the rule that produced it, and change one input. That short loop turns documentation into working knowledge.</p>
+          <div class="callout"><strong>Gotcha — familiarity is not recall.</strong><p>If an example looks obvious, close it and reproduce it from memory. The gap between recognizing code and writing it is where the useful practice lives.</p></div>
+          <h3>Use the toolchain as feedback</h3><p>Format early, run focused tests, and read the complete failure before editing. Go’s compiler and standard tools are part of the learning environment. A short, repeatable loop beats a large untested change.</p>
+        </>}
+      </section>
+
+      <section id="try"><h2>Try · predict before you run</h2>{snippets.map((code,i)=><div class="code"><header><span>example {i+1}.go</span><a href="https://go.dev/play/" target="_blank" rel="noreferrer">Open Playground ↗</a></header><pre><code>{code}</code></pre></div>)}</section>
+
+      <section id="quiz" class="quiz" data-quiz={day.id}><p class="eyebrow">Check the model</p><h2>Quick review</h2><p>Score 70% or higher. Your best score is saved.</p>
+        <form>
+          {questions.map((q,i)=><section class="question" data-question={q.id}><fieldset><legend>{i+1}. {q.prompt}</legend>{q.code && <div class="code"><pre><code>{q.code}</code></pre></div>}{q.options.map((o,j)=><label class="option"><input type="radio" name={q.id} value={j} data-correct={Boolean(o.correct)} data-why={o.why} required /><span>{o.text}</span></label>)}</fieldset><p class="feedback" data-feedback hidden></p></section>)}
+          <button class="button primary" type="submit">Check answers</button><p class="score" data-score tabindex="-1" hidden></p>
+        </form>
+      </section>
+
+      <section id="code"><p class="eyebrow">Make it yours</p><h2>{project ? 'Project checklist' : 'Coding tasks'}</h2><div class="tasks">
+        {['warmup','core','stretch'].map((level,i)=><article class="task"><header><h3>{day.tasks?.[i] ?? ['Review one missed concept','Retry a required task','Explain the weakest topic'][i]}</h3><span class="level">{level}</span></header><p>{project ? 'Work locally, run go test ./..., and mark this when the corresponding checks pass.' : i === 0 ? 'Solve a small, direct version. Keep the function pure and test an empty input.' : i === 1 ? 'Implement the central behavior and cover normal, empty and boundary cases.' : 'Optional: improve the design or complexity and explain the tradeoff.'}</p>{day.id === '05' && i === 1 && <textarea class="editor" spellcheck="false">{`package main\n\n// Dedup removes consecutive duplicate values in place.\nfunc Dedup(s []int) []int {\n\t// your code\n\treturn s\n}`}</textarea>}<details><summary>Hint</summary><p>{day.id === '05' ? ['Swap symmetric indexes while moving toward the middle.','Keep a write index behind the read index and return s[:w].','Normalize k, then use three in-place reversals.'][i] : 'Write the smallest example first. Use its result to decide the next case.'}</p></details><div class="task-actions"><a class="button" href="https://go.dev/play/" target="_blank" rel="noreferrer">Open Playground ↗</a><button class="button primary" type="button" data-task-pass={`${day.id}:${level}`}>Mark passed</button></div></article>)}
+      </div></section>
+      <section id="reflect" class="reflection"><h2>Reflect</h2><p>What clicked? What still feels fuzzy?</p><textarea data-note={day.id} maxlength="2000" placeholder="Two honest lines are enough."></textarea></section>
+    </article>
+  </div>
+</Base>

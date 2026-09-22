@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import { days, dayUrl } from '../../data/course';
+---
+<Base title="Progress" section="progress">
+  <header class="page-hero"><p class="eyebrow">Stored in this browser</p><h1>Your work belongs to you.</h1><p>Progress, code and reflections stay on this device. Export a backup whenever you like.</p></header>
+  <section class="stats" aria-label="Progress summary">
+    <div class="stat"><strong data-completed-count>0</strong><span>days complete</span></div>
+    <div class="stat"><strong data-average>—</strong><span>quiz average</span></div>
+    <div class="stat"><strong>45</strong><span>days in the path</span></div>
+  </section>
+  <section class="section">
+    <h2>Make it personal</h2>
+    <label class="field">Greeting name <input data-name autocomplete="name" maxlength="40" placeholder="Your name" /></label>
+    <h2>Backup and restore</h2>
+    <p>Your JSON backup includes quiz scores, task status and reflection notes.</p>
+    <div class="progress-actions"><button class="button primary" data-export>Export progress</button><label class="button">Import JSON <input class="sr-only" type="file" accept="application/json" data-import /></label><button class="button" data-reset>Reset progress</button></div>
+  </section>
+  <section class="section"><div class="section-head"><div><p class="eyebrow">Day by day</p><h2>Course record</h2></div></div><div class="roadmap-days" style="margin-left:0">{days.map((day) => <a class="roadmap-day" data-day={day.id} href={dayUrl(day.id)}><span class="num">{day.id.toUpperCase()}</span><div><h3>{day.title}</h3><p>{day.summary}</p></div><span class="pill">Open</span></a>)}</div></section>
+</Base>

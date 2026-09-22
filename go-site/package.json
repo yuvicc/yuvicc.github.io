@@ -1,0 +1,25 @@
+{
+  "name": "go-in-45-days",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.18" },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "test": "node --test tests/course.test.ts",
+    "test:routes": "node --test tests/routes.test.ts",
+    "test:browser": "node --test tests/browser.test.ts",
+    "test:all": "npm test && npm run build && npm run test:routes"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "playwright-core": "^1.63.0",
+    "typescript": "^6.0.3"
+  }
+}

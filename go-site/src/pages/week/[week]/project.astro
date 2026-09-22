@@ -1,0 +1,12 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { days } from '../../../data/course';
+export function getStaticPaths() {
+  return [1,2,3,4,5,6].map((week) => ({ params: { week: String(week) }, props: { week, day: days.find((d) => d.number === Math.min(week*7, 42))! } }));
+}
+const { week, day } = Astro.props;
+---
+<Base title={`Week ${week} project`} section="days">
+  <header class="page-hero"><p class="eyebrow">Week {week} · Local project</p><h1>{day.title}</h1><p>{day.summary}</p><div class="hero-actions"><a class="button primary" href={`/learn-go/day/${day.id}/#code`}>Open project checklist</a><a class="button" href="/learn-go/roadmap/">View roadmap</a></div></header>
+  <section class="section"><h2>Definition of done</h2><ol><li>The core behavior passes its acceptance tests.</li><li><code>gofmt -w .</code>, <code>go test ./...</code>, and <code>go vet ./...</code> finish cleanly.</li><li>Error paths and an empty input are covered.</li><li>You can explain one design decision and one tradeoff.</li></ol></section>
+</Base>

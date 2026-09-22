@@ -1,0 +1,12 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import { days, dayUrl } from '../../../../data/course';
+export function getStaticPaths() {
+  return days.flatMap((day) => ['1','2','3'].map((task) => ({ params: { id: day.id, task }, props: { day, task } })));
+}
+const { day, task } = Astro.props;
+const levels = ['Warm-up', 'Core', 'Stretch'];
+---
+<Base title={`${day.title} · ${levels[Number(task)-1]}`} section="days">
+  <header class="page-hero"><p class="eyebrow">Day {day.id.toUpperCase()} · Task {task}</p><h1>{levels[Number(task)-1]}: {day.title}</h1><p>Use the task workspace on the lesson page, then verify the result in the Go Playground or with <code>go test</code> locally.</p><div class="hero-actions"><a class="button primary" href={`${dayUrl(day.id)}#code`}>Open task workspace</a><a class="button" href={dayUrl(day.id)}>Back to lesson</a></div></header>
+</Base>

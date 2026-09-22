@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import { days, weeks, dayUrl } from '../data/course';
+---
+<Base title="Go in 45 Days" section="home">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">A deliberate path to production Go<span data-greeting-name></span></p>
+      <h1>Build fluency.<br /><em>Ship Go.</em></h1>
+      <p class="lede">Forty-two focused lessons, six real projects, and three catch-up days. Go from “I know the syntax” to a service you can test, profile, and ship.</p>
+      <div class="hero-actions">
+        <a class="button primary" href={dayUrl('01')} data-continue><span data-continue-text>Start Day 1</span>&nbsp; →</a>
+        <a class="button" href="/learn-go/roadmap/">Explore the roadmap</a>
+      </div>
+    </div>
+    <aside class="hero-panel" aria-label="Course at a glance">
+      <div class="metric"><span>Daily commitment</span><strong>90 min</strong></div>
+      <div class="metric"><span>Hands-on projects</span><strong>6</strong></div>
+      <div class="metric"><span>Course progress</span><strong><span data-completed-count>0</span>/42</strong></div>
+      <div class="terminal" aria-label="A passing Go test run">
+        <div class="terminal-bar"><i></i><i></i><i></i></div>
+        <pre><span class="ok">$</span> go test ./...
+<span class="ok">ok</span>   spendwise/internal/api   0.084s
+<span class="ok">ok</span>   spendwise/internal/store 0.123s
+
+<span class="ok">✓</span> race clean  <span class="ok">✓</span> 82.4% coverage</pre>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><p class="eyebrow">The curriculum</p><h2>Six weeks. One clear arc.</h2></div><p>Each week turns concepts into a local project using the real Go toolchain.</p></div>
+    <div class="week-grid">
+      {weeks.map(([title, summary], i) => <article class="week-card" data-week={String(i + 1).padStart(2,'0')}><span class="week-num">WEEK {String(i + 1).padStart(2,'0')}</span><h3>{title}</h3><p>{summary}</p></article>)}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><p class="eyebrow">Your momentum</p><h2>Forty-five days at a glance.</h2></div><p>Green means complete. Amber means started. Every day stays open, so curiosity never has to wait.</p></div>
+    <div class="day-strip">
+      {days.map((day) => <a class="day-dot" data-day={day.id} href={dayUrl(day.id)} aria-label={`${day.id}: ${day.title}`}>{day.id.toUpperCase()}</a>)}
+    </div>
+  </section>
+</Base>
