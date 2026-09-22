@@ -1,0 +1,40 @@
+day: 21
+slug: "21"
+title: Check readiness for a first contribution
+phase: clang
+toolchain: main
+checkpoint: C
+prerequisites:
+  - 20
+minutes:
+  reading: 30
+  practice: 90
+  verification: 20
+  notes: 10
+goals:
+  - Build, reproduce, test and explain independently.
+reading:
+  - resourceId: notes
+    section: No new chapter. Revisit only the gap found during the checkpoint
+    minutes: 30
+    upTo: true
+steps:
+  - Run the relevant test directory.
+  - Explain a diagnostic path and your scratch regression test without notes.
+  - List two candidate areas you can reason about and two you should postpone.
+  - Catch up before selecting an issue.
+deliverable: "Checkpoint C: working current-main Clang, a focused lit command, and an explainable test. If missing, extend days 15–19."
+checks:
+  - id: day-21-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-21-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-21-done
+    label: "Done when: Checkpoint C: working current-main Clang, a focused lit command, and an explainable test. If missing, extend days 15–19."
+    required: true
+  - id: day-21-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Can you tell whether a test failure comes from your change, the baseline or the environment?

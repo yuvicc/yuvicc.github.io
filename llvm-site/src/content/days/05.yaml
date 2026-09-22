@@ -1,0 +1,41 @@
+day: 5
+slug: "05"
+title: Write a recursive descent parser
+phase: foundations
+toolchain: host
+prerequisites:
+  - 4
+minutes:
+  reading: 45
+  practice: 75
+  verification: 20
+  notes: 10
+goals:
+  - Parsing expressions, consuming tokens and reporting syntax errors.
+reading:
+  - resourceId: R1
+    section: "Chapter 3: recursive descent parser"
+    minutes: 35
+  - resourceId: R3
+    section: Expression parsing, if precedence is unclear
+    minutes: 10
+steps:
+  - Implement the grammar from day 4.
+  - Parse addition, subtraction, multiplication and parentheses.
+  - Add a `let name = expression;` statement.
+  - Fail with a useful location for a missing closing parenthesis or missing operand.
+deliverable: At least eight cases covering precedence, associativity, nested parentheses and syntax errors.
+checks:
+  - id: day-05-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-05-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-05-done
+    label: "Done when: At least eight cases covering precedence, associativity, nested parentheses and syntax errors."
+    required: true
+  - id: day-05-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: How does your parser prevent an infinite loop on invalid input?

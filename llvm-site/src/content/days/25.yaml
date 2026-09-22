@@ -1,0 +1,40 @@
+day: 25
+slug: "25"
+title: Capture the regression first
+phase: contribution
+toolchain: main
+prerequisites:
+  - 24
+minutes:
+  reading: 20
+  practice: 100
+  verification: 20
+  notes: 10
+goals:
+  - A meaningful failing test or a demonstrable documentation defect.
+reading:
+  - resourceId: checkout
+    section: Nearby test conventions
+    minutes: 20
+  - resourceId: R10
+    section: Review only as needed
+steps:
+  - Add a minimal regression test to the appropriate Clang directory.
+  - Show it fails against the unchanged compiler for the intended reason.
+  - Include a valid nearby case when useful.
+  - For a test-coverage-only contribution, explain the missing coverage instead of claiming a fail-before result.
+deliverable: A baseline failure log for a behavior fix, or a precise coverage/documentation justification.
+checks:
+  - id: day-25-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-25-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-25-done
+    label: "Done when: A baseline failure log for a behavior fix, or a precise coverage/documentation justification."
+    required: true
+  - id: day-25-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Would this test catch the original defect if the implementation were reverted?

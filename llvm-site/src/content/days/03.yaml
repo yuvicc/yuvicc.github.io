@@ -1,0 +1,41 @@
+day: 3
+slug: "03"
+title: Turn characters into tokens
+phase: foundations
+toolchain: host
+prerequisites:
+  - 1
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - Identifiers, integer literals, punctuation, whitespace, source locations and end-of-file.
+reading:
+  - resourceId: R1
+    section: "Chapter 2: lexical analysis"
+    minutes: 25
+  - resourceId: R3
+    section: Scanning discussion; use it for concepts, not a second implementation
+    minutes: 15
+steps:
+  - Start a tiny expression language in C++.
+  - Write a lexer for integers, names, +, -, *, parentheses, = and semicolons.
+  - Track line and column.
+  - Reject an unknown character and an overflowing integer literal cleanly.
+deliverable: Token output for valid input plus tests for whitespace, end-of-file and malformed input.
+checks:
+  - id: day-03-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-03-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-03-done
+    label: "Done when: Token output for valid input plus tests for whitespace, end-of-file and malformed input."
+    required: true
+  - id: day-03-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Why should tokens retain a location after whitespace is discarded?

@@ -1,0 +1,174 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import { url } from '../../data/site.ts';
+
+const buildRecipe = String.raw`
+git clone https://github.com/llvm/llvm-project.git llvm-main
+cd llvm-main
+git rev-parse HEAD
+cmake -S llvm -B build -G Ninja \
+  -DLLVM_ENABLE_PROJECTS=clang \
+  -DLLVM_TARGETS_TO_BUILD=Native \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DLLVM_ENABLE_ASSERTIONS=ON \
+  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+  -DLLVM_PARALLEL_LINK_JOBS=1
+cmake --build build --target clang --parallel 2
+build/bin/clang++ --version
+cmake --build build --target check-clang --parallel 2`;
+
+const pipeline = String.raw`
+CXX=/absolute/path/to/clang++
+"$CXX" --version
+"$CXX" -std=c++17 -E sample.cpp -o sample.ii
+"$CXX" -std=c++17 -S -emit-llvm sample.cpp -o sample.ll
+"$CXX" -std=c++17 -S sample.cpp -o sample.s
+"$CXX" -std=c++17 -c sample.cpp -o sample.o
+"$CXX" -std=c++17 -Xclang -ast-dump \
+  -fsyntax-only sample.cpp`;
+
+const irTools = String.raw`
+LLVM17_BIN=/absolute/path/to/llvm17/bin
+"$LLVM17_BIN/llvm-as" example.ll -o example.bc
+"$LLVM17_BIN/opt" -passes=verify \
+  -disable-output example.bc
+"$LLVM17_BIN/opt" -S -passes='default<O1>' \
+  example.ll -o optimized.ll`;
+---
+
+<Base title="Setup" description="Version discipline, build recipes, compiler exploration commands and troubleshooting." section="setup">
+  <div class="prose">
+    <h1>Setup</h1>
+    <p class="lead">
+      Two toolchains, kept apart: LLVM 17 for book exercises and a current-main checkout for contribution work.
+    </p>
+    <p class="small muted">
+      These commands are starting recipes to verify on your own machine, not recorded results. Check current requirements in{' '}
+      <a href={url('resources/#r4')}>R4</a> and <a href={url('resources/#r5')}>R5</a> before configuring.
+    </p>
+
+    <h2 id="versions">Version discipline</h2>
+    <p>
+      Use LLVM 17 and matching archived documentation for book exercises. Use a separate current llvm-project main checkout for
+      contributions. Record its commit SHA and check current build requirements; the book’s minimum compiler versions are
+      historical.
+    </p>
+    <p>
+      Keep separate builds and explicit executable paths. Do not mix headers, libraries or plugins across versions. Reproduce proposed
+      upstream bugs on current main.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">Toolchain</th><th scope="col">Days</th><th scope="col">Use it for</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Host C++ compiler</td><td>3–6</td><td>Building the toy expression frontend</td></tr>
+          <tr>
+            <td>LLVM 17</td>
+            <td>1, 2, 7–12</td>
+            <td>Book exercises, IR experiments, the toy frontend’s IR generation (bound to the LLVM 17 CMake package)</td>
+          </tr>
+          <tr>
+            <td>Current main (<code>build/bin/clang++</code>)</td>
+            <td>2, 7, 12–30</td>
+            <td>Clang source work, AST dumps, lit tests and anything you report or submit upstream</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="build">Build setup for the contribution track</h2>
+    <p>
+      The recipe assumes a Unix-like shell and installed Git, CMake, Ninja, Python and a host C++ compiler satisfying the current
+      LLVM requirements in R4. Start in your development directory. On Ubuntu, install the required development packages through
+      your package manager; on macOS, use a working Xcode Command Line Tools installation and the needed build tools. Verify current
+      minimum versions before configuring. Do not overwrite the system compiler.
+    </p>
+  </div>
+  <CodeBlock code={buildRecipe} lang="bash" label="Current-main Clang build" />
+  <div class="prose">
+    <p>
+      Native limits target backends to the host architecture; cross-target tests may be unsupported. Start with two build jobs and
+      one link job, then adjust to available RAM. Release with assertions is a practical first build. For day 19, use a separate
+      RelWithDebInfo build with assertions, or another locally appropriate debug configuration; expect higher disk and memory use.
+    </p>
+    <p>
+      As a planning allowance, reserve tens of gigabytes and preferably around 60–100 GB free for source and multiple builds; actual
+      usage varies substantially. A 16 GB machine can require conservative parallelism; more memory is helpful. These are planning
+      estimates, not official minimums.
+    </p>
+
+    <h2 id="reproducibility">Maintain a reproducibility note</h2>
+    <p>
+      Record the checkout SHA, CMake command, host compiler, generated compiler version, target, relevant environment settings and
+      exact test commands. The contribution compiler is <code>build/bin/clang++</code>, not whichever <code>clang++</code> happens to
+      be first on PATH. Keep your exercises outside the upstream checkout.
+    </p>
+    <p>
+      For a book source build, use a separate LLVM 17 checkout pinned to the release or patch version you actually use, plus a
+      separate build directory. Do not reuse main’s CMake cache. Match <code>LLVM_DIR</code> in your toy project to that LLVM 17
+      installation’s <code>lib/cmake/llvm</code> directory. Begin with packaged LLVM 17 tools for book work if a second source build
+      is too costly.
+    </p>
+
+    <h2 id="explore">Commands for compiler exploration</h2>
+    <p>
+      Set <code>CXX</code> to an explicit compiler path: your LLVM 17 <code>clang++</code> for book experiments, or the current-main
+      build for upstream work. Use these on a small <code>sample.cpp</code> you wrote yourself.
+    </p>
+  </div>
+  <CodeBlock code={pipeline} lang="bash" label="Compiler pipeline (day 1 and later)" />
+  <div class="prose">
+    <p>
+      For LLVM 17 IR exercises, choose the <code>bin</code> directory containing matching <code>llvm-as</code> and <code>opt</code>.
+      Verification and optimization are separate operations; emitted IR may contain <code>optnone</code> when generated without
+      optimization. Prefer handwritten IR for the first optimization experiment, or deliberately select an appropriate compiler
+      optimization setting.
+    </p>
+  </div>
+  <CodeBlock code={irTools} lang="bash" label="LLVM 17 IR tools" />
+
+  <div class="prose">
+    <h2 id="troubleshooting">Troubleshooting</h2>
+    <dl class="trouble">
+      <dt>Configuration rejects the host compiler</dt>
+      <dd>Use a recent supported host compiler (see R4) instead of overwriting the system compiler.</dd>
+      <dt>The machine runs out of memory during the build</dt>
+      <dd>
+        Lower parallelism (<code>--parallel</code> and <code>LLVM_PARALLEL_LINK_JOBS</code>) before adding projects or targets. Reuse
+        Ninja’s incremental build rather than starting over.
+      </dd>
+      <dt>A long first build is not finished</dt>
+      <dd>
+        Let it continue in the background; a successful configure is enough for day 2. On day 7, finish it or record the first build
+        blocker and a specific recovery step.
+      </dd>
+      <dt>Link errors or odd behavior in the toy project</dt>
+      <dd>
+        Suspect a version mix. Confirm <code>llvm-config --version</code> and that <code>LLVM_DIR</code> points at the LLVM 17
+        installation, not main.
+      </dd>
+      <dt>Some lit tests report unsupported</dt>
+      <dd>
+        With <code>Native</code> targets, cross-target tests may be unsupported. Record them separately; do not treat an unsupported
+        test as passing coverage.
+      </dd>
+      <dt>Debug symbols or memory block debugging on day 19</dt>
+      <dd>Trace the same path manually, record the limitation and schedule a narrow debug build.</dd>
+      <dt>Disk space runs low</dt>
+      <dd>Plan for tens of gigabytes, preferably 60–100 GB free, across source and multiple build directories.</dd>
+    </dl>
+  </div>
+</Base>
+
+<style>
+  .trouble dt {
+    font-weight: 700;
+    margin-top: 0.9rem;
+  }
+  .trouble dd {
+    margin: 0.2rem 0 0;
+  }
+</style>

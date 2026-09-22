@@ -1,0 +1,9 @@
+---
+// Renders plain text, turning `backtick` spans into <code>. Never interprets HTML.
+interface Props {
+  text: string;
+}
+const parts = Astro.props.text.split('`');
+---
+
+{parts.map((part, i) => (i % 2 === 1 ? <code>{part}</code> : part))}

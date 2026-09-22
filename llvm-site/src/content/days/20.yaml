@@ -1,0 +1,42 @@
+day: 20
+slug: "20"
+title: Read the contribution rules and a small merged change
+phase: clang
+toolchain: main
+prerequisites:
+  - 19
+minutes:
+  reading: 45
+  practice: 75
+  verification: 20
+  notes: 10
+goals:
+  - Patch scope, style, review and attribution.
+reading:
+  - resourceId: R13
+    section: Relevant contributor, GitHub, coding and AI-use guidance (R13–R16)
+    minutes: 45
+    also:
+      - R14
+      - R15
+      - R16
+steps:
+  - Find one small merged Clang PR touching your chosen area.
+  - Read its problem statement, diff, test and review discussion.
+  - Summarize why the test belongs in that directory and what the reviewer requested.
+  - Record the PR link; do not copy its solution.
+deliverable: A short review study and a personal checklist for an understandable, tested patch.
+checks:
+  - id: day-20-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-20-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-20-done
+    label: "Done when: A short review study and a personal checklist for an understandable, tested patch."
+    required: true
+  - id: day-20-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: What makes this change useful enough to justify reviewer time?

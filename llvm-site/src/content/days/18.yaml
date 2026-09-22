@@ -1,0 +1,41 @@
+day: 18
+slug: "18"
+title: Study one C++ semantic rule
+phase: clang
+toolchain: main
+prerequisites:
+  - 17
+minutes:
+  reading: 45
+  practice: 75
+  verification: 20
+  notes: 10
+goals:
+  - A deliberately narrow slice of Sema.
+reading:
+  - resourceId: R9
+    section: Relevant Sema discussion
+    minutes: 15
+  - resourceId: checkout
+    section: The implementation and nearby tests for one rule
+    minutes: 30
+steps:
+  - "Pick one manageable topic: const-related diagnostics, invalid initialization or simple name lookup."
+  - Write five small C++ examples changing one property at a time.
+  - Predict results before compiling.
+  - Find the checking function and record the observed code path.
+deliverable: A five-case behavior matrix and one function you can explain in your own words.
+checks:
+  - id: day-18-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-18-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-18-done
+    label: "Done when: A five-case behavior matrix and one function you can explain in your own words."
+    required: true
+  - id: day-18-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: What evidence distinguishes an actual compiler bug from an incorrect expectation about C++?

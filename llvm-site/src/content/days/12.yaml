@@ -1,0 +1,41 @@
+day: 12
+slug: "12"
+title: Connect IR learning to the C++ compiler
+phase: ir
+toolchain: both
+checkpoint: B
+prerequisites:
+  - 10
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - C++ frontend responsibilities versus target-independent optimization.
+reading:
+  - resourceId: R1
+    section: "Chapter 5: skim aggregate and ABI topics"
+    minutes: 25
+  - resourceId: R8
+    section: AST introduction
+    minutes: 15
+steps:
+  - Dump the Clang AST for a struct, function call and overloaded function.
+  - Compare AST and IR for one example.
+  - Freeze the toy project with a README and known limitations; move your main attention to Clang.
+deliverable: "Checkpoint B: explain source → AST → IR → executable and identify which stage a C++ type error belongs to."
+checks:
+  - id: day-12-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-12-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-12-done
+    label: "Done when: Checkpoint B: explain source → AST → IR → executable and identify which stage a C++ type error belongs to."
+    required: true
+  - id: day-12-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Why is writing an LLVM IR optimization pass not the same task as changing C++ overload resolution?

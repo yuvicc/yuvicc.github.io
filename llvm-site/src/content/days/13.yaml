@@ -1,0 +1,39 @@
+day: 13
+slug: "13"
+title: Navigate the Clang source tree
+phase: clang
+toolchain: main
+prerequisites:
+  - 2
+  - 12
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - Lex, Parse, AST, Sema, Basic and CodeGen.
+reading:
+  - resourceId: R9
+    section: Internals overview and the relevant library sections
+    minutes: 40
+steps:
+  - Locate `clang/lib/Lex`, `Parse`, `AST`, `Sema` and `CodeGen`, plus `clang/include/clang/Basic` and `clang/test`.
+  - Search for a diagnostic you can trigger.
+  - Follow its definition to a caller.
+  - Keep a source map with paths and one responsibility each.
+deliverable: A source map and one diagnostic traced from output text into implementation.
+checks:
+  - id: day-13-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-13-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-13-done
+    label: "Done when: A source map and one diagnostic traced from output text into implementation."
+    required: true
+  - id: day-13-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Which directories would you investigate for a valid program rejected during type checking?

@@ -1,0 +1,170 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { PHASE_INFO, url, dayUrl } from '../../data/site.ts';
+
+const days = (await getCollection('days')).map((e) => e.data).sort((a, b) => a.day - b.day);
+const minutes = (d: (typeof days)[number]) =>
+  d.minutes.reading + d.minutes.practice + d.minutes.verification + d.minutes.notes;
+
+const MILESTONES = [
+  { day: 7, id: 'A', evidence: 'Lexer, parser, semantic checks and evaluator tests' },
+  { day: 12, id: 'B', evidence: 'Verified IR and an executable generated from the toy frontend' },
+  { day: 21, id: 'C', evidence: 'Current-main Clang build, diagnostic trace and a lit test' },
+  { day: 30, id: 'D', evidence: 'Contribution or investigation, validation record and follow-up plan' },
+];
+---
+
+<Base title="Roadmap" description="All 30 study days by phase, with completion state and checkpoints." section="roadmap">
+  <div class="prose">
+    <h1>Roadmap</h1>
+    <p class="lead">All 30 days in learning order. Open any day at any time; completion counts only required checks.</p>
+    <div class="js-only">
+      <p class="small" data-overall-text></p>
+      <div class="progress-bar" aria-hidden="true"><span data-overall-bar></span></div>
+    </div>
+  </div>
+
+  <section aria-labelledby="summary" class="no-print-break">
+    <h2 id="summary" class="visually-hidden">Phase summary</h2>
+    <div class="grid-cards phase-summary">
+      {
+        PHASE_INFO.map((p) => (
+          <div class="card">
+            <p class="eyebrow">
+              Days {p.range[0]}–{p.range[1]}
+            </p>
+            <h3>{p.label}</h3>
+            <p class="small">{p.summary}</p>
+            <p class="small js-only" data-phase-count={p.id} />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <div class="filters js-only no-print" role="group" aria-label="Filter days by phase">
+    <button type="button" data-filter="all" aria-pressed="true">All</button>
+    {
+      PHASE_INFO.map((p) => (
+        <button type="button" data-filter={p.id} aria-pressed="false">
+          {p.label}
+        </button>
+      ))
+    }
+  </div>
+  <p class="visually-hidden" aria-live="polite" data-filter-status></p>
+
+  {
+    PHASE_INFO.map((p) => (
+      <section class="phase-group" data-phase-group={p.id} aria-labelledby={`phase-${p.id}`}>
+        <h2 id={`phase-${p.id}`}>
+          {p.label} <span class="muted small">Days {p.range[0]}–{p.range[1]}</span>
+        </h2>
+        {p.id === 'foundations' && (
+          <p class="prose small">
+            Days 3–10 share one toy project: an integer expression language with let bindings, <code>+</code>, <code>-</code>,{' '}
+            <code>*</code>, parentheses and source locations. It tokenizes, parses, resolves names, evaluates and emits LLVM IR.
+            Values are unsigned 32-bit integers with wraparound. Source-language branches and loops stay optional; day 11 teaches
+            their IR separately.
+          </p>
+        )}
+        <ol class="day-list">
+          {days
+            .filter((d) => d.phase === p.id)
+            .map((d) => (
+              <li data-day-row={d.slug}>
+                <div class="day-row">
+                  <span class="num" aria-hidden="true">
+                    {d.slug}
+                  </span>
+                  <a href={dayUrl(d.slug)}>
+                    <span class="visually-hidden">Day {d.day}: </span>
+                    {d.title}
+                  </a>
+                  <div class="meta">
+                    <span class="status js-only" data-day-status={d.slug} />
+                    {d.checkpoint && <span class="tag checkpoint">Checkpoint {d.checkpoint}</span>}
+                    <span>{minutes(d)} min</span>
+                    <span class="js-only" data-planned-date={d.day} />
+                  </div>
+                </div>
+              </li>
+            ))}
+        </ol>
+      </section>
+    ))
+  }
+
+  <section class="prose" aria-labelledby="milestones">
+    <h2 id="milestones">Milestones</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">Checkpoint</th><th scope="col">Evidence to retain</th></tr>
+        </thead>
+        <tbody>
+          {
+            MILESTONES.map((m) => (
+              <tr>
+                <td>
+                  <a href={dayUrl(String(m.day).padStart(2, '0'))}>
+                    {m.id}: day {m.day}
+                  </a>
+                </td>
+                <td>{m.evidence}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Keep contribution status separate from learning completion. A submitted patch is not a merged patch, and an unmerged but
+      carefully investigated contribution can still demonstrate real progress.
+    </p>
+  </section>
+
+  <section class="prose" aria-labelledby="after-day-30">
+    <h2 id="after-day-30">After day 30</h2>
+    <p>
+      Spend the next two weeks responding to review and deepening one area of Clang Sema, AST or diagnostics. Prefer two small
+      follow-up investigations over starting a second large compiler project. Keep compiling examples and predicting behavior before
+      looking at output.
+    </p>
+    <p>
+      Then select reading by need: chapter 5 for C++ object representation and ABI context; chapter 6 for exceptions and debug
+      metadata; chapter 7 for optimization work; chapter 8 for more TableGen; later backend chapters only if target work becomes your
+      goal. <a href={url('resources/#r19')}>LibTooling and AST matchers (R19)</a> can become a separate small tooling project, but
+      clang-tidy or tooling experience does not automatically replace frontend contribution practice.
+    </p>
+    <p>
+      A useful end-of-month record includes a working tiny compiler, three Clang AST examples, one diagnostic trace, a regression test
+      you understand, a contribution or investigation link, and a truthful status note. Measure progress by what you can explain and
+      reproduce.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .filters {
+    display: none;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.5rem 0 1rem;
+  }
+  :global(.js) .filters {
+    display: flex;
+  }
+  .phase-group[hidden] {
+    display: none;
+  }
+  @media print {
+    .phase-summary {
+      display: none;
+    }
+    .phase-group[hidden] {
+      display: block !important;
+    }
+  }
+</style>

@@ -1,0 +1,40 @@
+day: 29
+slug: "29"
+title: Respond to review or strengthen the evidence
+phase: contribution
+toolchain: main
+prerequisites:
+  - 28
+minutes:
+  reading: 30
+  practice: 90
+  verification: 20
+  notes: 10
+goals:
+  - Review is asynchronous; progress does not require an immediate reply.
+reading:
+  - resourceId: R17
+    section: Any reviewer feedback and relevant code
+    minutes: 30
+    upTo: true
+    also:
+      - checkout
+steps:
+  - If feedback arrives, reproduce the concern, revise and rerun relevant tests.
+  - Otherwise perform a fresh self-review, reduce unnecessary code, verify the PR description and document one follow-up idea.
+  - Avoid repeated review pings during this short window.
+deliverable: A review-response log or a stronger self-reviewed patch with updated evidence.
+checks:
+  - id: day-29-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-29-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-29-done
+    label: "Done when: A review-response log or a stronger self-reviewed patch with updated evidence."
+    required: true
+  - id: day-29-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: What would you change if a reviewer preferred a different approach?

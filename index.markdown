@@ -4,3 +4,5 @@
 
 layout: home
 ---
+
+Currently working through [LLVM and Clang in 30 Study Days](/llvm/), a study plan and tracker toward a first Clang contribution.

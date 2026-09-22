@@ -1,0 +1,145 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { RESOURCES, CATEGORY_LABELS, SOURCE_REVIEW_DATE, type ResourceCategory } from '../../data/resources.ts';
+import { BOOK_MAP } from '../../data/book.ts';
+import { url, dayUrl } from '../../data/site.ts';
+
+const days = (await getCollection('days')).map((e) => e.data).sort((a, b) => a.day - b.day);
+const usedOn = (id: string) =>
+  days.filter((d) => d.reading.some((r) => r.resourceId === id || r.also?.includes(id))).map((d) => d.slug);
+
+const order: ResourceCategory[] = ['book', 'foundations', 'setup', 'ir', 'clang', 'testing', 'contributing', 'tooling', 'website', 'local'];
+const groups = order.map((cat) => ({ cat, items: RESOURCES.filter((r) => r.category === cat) })).filter((g) => g.items.length);
+---
+
+<Base title="Resources" description="Book chapter mapping and the R1–R20 reference registry, grouped by purpose." section="resources">
+  <div class="prose">
+    <h1>Resources</h1>
+    <p class="lead">The book mapping and every reference used in the daily lessons, grouped by purpose.</p>
+    <p class="small muted">
+      Source review date: {SOURCE_REVIEW_DATE}. Live documentation and policies change; recheck contribution instructions and tool
+      requirements when you use them.
+    </p>
+  </div>
+
+  <section class="prose" aria-labelledby="book">
+    <h2 id="book">Book mapping</h2>
+    <p>
+      <a href="#r1">Learn LLVM 17, Second Edition</a>, Kai Nacke and Amy Kwan, ISBN 9781837631346. For a different book, map by topic.
+      Prioritize this subset over finishing the whole book. Compare the companion code (R2) after your own attempt.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">Reading</th><th scope="col">When</th><th scope="col">Depth and purpose</th></tr>
+        </thead>
+        <tbody>
+          {
+            BOOK_MAP.map((b) => (
+              <tr>
+                <td>{b.chapter}</td>
+                <td>
+                  {b.days.length
+                    ? b.days.map((n, i) => (
+                        <>
+                          {i > 0 && ', '}
+                          <a href={dayUrl(String(n).padStart(2, '0'))}>{n}</a>
+                        </>
+                      ))
+                    : b.when}
+                  {b.days.length > 0 && <span class="visually-hidden"> ({b.when})</span>}
+                </td>
+                <td>{b.purpose}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="small">
+      <a href="#r3">Crafting Interpreters (R3)</a> supplements scanning, syntax and parsing concepts; its implementation differs from
+      the C++ toy project. Use it and the <a href="#r7">LLVM tutorial (R7)</a> selectively, without starting another full compiler
+      or interpreter.
+    </p>
+  </section>
+
+  {
+    groups.map((g) => (
+      <section aria-labelledby={`cat-${g.cat}`}>
+        <h2 id={`cat-${g.cat}`}>{CATEGORY_LABELS[g.cat]}</h2>
+        <div class="resource-list">
+          {g.items.map((res) => {
+            const used = usedOn(res.id);
+            return (
+              <article class="card resource" id={res.id.toLowerCase()}>
+                <h3>
+                  {res.id.startsWith('R') && <span class="rid">{res.id}</span>} {res.title}
+                </h3>
+                <p>{res.description}</p>
+                {res.links.length > 0 && (
+                  <ul class="links">
+                    {res.links.map((l) => (
+                      <li>
+                        <a href={l.url} rel="noopener">
+                          {l.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {res.internalPath && (
+                  <p>
+                    <a href={url(res.internalPath)}>Open on this site</a>
+                  </p>
+                )}
+                <p class="small muted">
+                  Version context: {res.versionContext}. Reviewed {res.reviewed}.
+                  {used.length > 0 && (
+                    <>
+                      {' '}
+                      Used on day{used.length > 1 ? 's' : ''}{' '}
+                      {used.map((s, i) => (
+                        <>
+                          {i > 0 && ', '}
+                          <a href={dayUrl(s)}>{s}</a>
+                        </>
+                      ))}
+                      .
+                    </>
+                  )}
+                </p>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .resource-list {
+    display: grid;
+    gap: 0.9rem;
+    max-width: var(--measure);
+  }
+  .resource h3 {
+    margin-bottom: 0.4rem;
+  }
+  .rid {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.9em;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    list-style: none;
+    padding: 0;
+  }
+  .resource:target {
+    outline: 2px solid var(--accent);
+  }
+</style>

@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { PHASE_INFO, SITE_TITLE, url, dayUrl } from '../data/site.ts';
+
+const days = (await getCollection('days')).map((e) => e.data).sort((a, b) => a.day - b.day);
+---
+
+<Base title={SITE_TITLE} section="home">
+  <section class="hero prose">
+    <p class="eyebrow">A study plan and private tracker</p>
+    <h1>{SITE_TITLE}</h1>
+    <p class="lead">
+      From C++ developer with no compiler background to contribution readiness: a small, useful Clang contribution that you
+      understand and can test.
+    </p>
+    <p>
+      Ideally that is a narrow fix with a regression test. A documentation improvement or a well-investigated bug report is a valid
+      fallback. Maintainer acceptance and merge timing sit outside a 30-day schedule.
+    </p>
+
+    <div class="continue-box">
+      <a class="button primary" href={dayUrl('01')} data-continue>
+        <span data-continue-label>Start with day 01</span> →
+      </a>
+      <a class="button" href={url('roadmap/')}>See all 30 days</a>
+    </div>
+    <div class="js-only" data-overall>
+      <p class="small" data-overall-text></p>
+      <div class="progress-bar" aria-hidden="true"><span data-overall-bar></span></div>
+    </div>
+  </section>
+
+  <section class="prose" aria-labelledby="time">
+    <h2 id="time">Time commitment</h2>
+    <p>
+      30 study sessions of about 150 minutes, roughly 75 focused hours. A normal session is 40 minutes reading, 80 minutes
+      implementation or investigation, 20 minutes testing and 10 minutes notes. Some reading-heavy days use up to 45 minutes
+      and rebalance the lab. Initial compiler builds take additional unattended time.
+    </p>
+    <p>At 60–90 minutes per day, split each session over two days and plan for a calendar of about 60 days.</p>
+  </section>
+
+  <section aria-labelledby="phases">
+    <h2 id="phases">Four phases</h2>
+    <div class="grid-cards">
+      {
+        PHASE_INFO.map((p) => {
+          const first = days.find((d) => d.day === p.range[0])!;
+          return (
+            <div class="card">
+              <p class="eyebrow">
+                Days {p.range[0]}–{p.range[1]}
+              </p>
+              <h3>
+                <a href={url(`roadmap/#phase-${p.id}`)}>{p.label}</a>
+              </h3>
+              <p>{p.summary}</p>
+              <p class="small">
+                Starts with <a href={dayUrl(first.slug)}>{first.title.toLowerCase()}</a>.
+                <span class="js-only muted" data-phase-count={p.id} />
+              </p>
+            </div>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <section class="prose" aria-labelledby="start">
+    <h2 id="start">Before you start</h2>
+    <p>
+      You should be comfortable with C++ functions, classes, references, pointers, RAII, containers, basic templates, Git and terminal
+      use. You do not need prior parsing, automata theory, assembly expertise or compiler coursework. If a prerequisite blocks a task,
+      add a focused preparation session and shift the calendar instead of skipping the competency check.
+    </p>
+    <p>
+      Keep a learning repository separate from llvm-project for exercises, short daily notes, commands, tool versions and small output
+      samples. A checked reading box does not by itself prove a day is complete: finish its lab and completion criterion. Days 7, 12,
+      21 and 30 are checkpoints. Repeat a blocked section when needed; the day numbers are a learning order, not a deadline.
+    </p>
+    <p>
+      Progress and notes stay in this browser only. <a href={url('notes/')}>Export them</a> regularly.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: 1rem 0.5rem;
+  }
+  .continue-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 1.5rem 0 1rem;
+  }
+</style>

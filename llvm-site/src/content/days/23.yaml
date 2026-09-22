@@ -1,0 +1,40 @@
+day: 23
+slug: "23"
+title: Reduce the reproducer and establish expected behavior
+phase: contribution
+toolchain: main
+prerequisites:
+  - 22
+minutes:
+  reading: 45
+  practice: 75
+  verification: 20
+  notes: 10
+goals:
+  - Minimal examples and language-rule evidence.
+reading:
+  - resourceId: checkout
+    section: The selected issue, nearby tests and the relevant C++ rule or Clang documentation
+    minutes: 45
+    upTo: true
+    also:
+      - R17
+steps:
+  - Reduce the failing program, remove unrelated includes, and record compiler SHA, target, flags and observed behavior.
+  - Explain why the expected behavior is correct; another compiler is supporting evidence, not the specification.
+  - For a documentation task, preserve the exact failing documented workflow.
+deliverable: A minimal reproducer and a reasoned expected-versus-actual note.
+checks:
+  - id: day-23-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-23-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-23-done
+    label: "Done when: A minimal reproducer and a reasoned expected-versus-actual note."
+    required: true
+  - id: day-23-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Which remaining line is necessary to trigger the problem?

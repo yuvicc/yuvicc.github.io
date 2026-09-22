@@ -1,0 +1,45 @@
+day: 10
+slug: "10"
+title: Compile and run a tiny program
+phase: ir
+toolchain: llvm17
+prerequisites:
+  - 9
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - Connecting generated IR to a host program.
+reading:
+  - resourceId: R1
+    section: "Chapter 4: module and driver discussion"
+    minutes: 30
+  - resourceId: R7
+    section: Object-code chapter, skim
+    minutes: 10
+steps:
+  - Emit a function named calc returning the expression result.
+  - Compile the `.ll` file with matching LLVM 17 Clang and link a tiny C++ harness using `extern "C"`.
+  - Compare executable output with your evaluator on bounded integer examples.
+deliverable: One end-to-end demo and at least five evaluator-versus-compiled comparisons.
+checks:
+  - id: day-10-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-10-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-10-done
+    label: "Done when: One end-to-end demo and at least five evaluator-versus-compiled comparisons."
+    required: true
+  - id: day-10-recall
+    label: Answered the recall question in my own words
+    required: true
+  - id: day-10-optional
+    label: Tried the optional work
+    required: false
+recallQuestion: Why does the C++ harness declare calc with C linkage?
+optional:
+  - Generate an object file directly through the book’s driver approach.

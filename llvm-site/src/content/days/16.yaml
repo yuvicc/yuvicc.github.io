@@ -1,0 +1,41 @@
+day: 16
+slug: "16"
+title: Write focused diagnostic tests
+phase: clang
+toolchain: main
+prerequisites:
+  - 15
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - Positive cases, negative cases, language modes and regression intent.
+reading:
+  - resourceId: R10
+    section: Test-writing guidance
+    minutes: 20
+  - resourceId: checkout
+    section: Two nearby SemaCXX tests
+    minutes: 20
+steps:
+  - Choose an existing diagnostic, not a new bug claim.
+  - Build a scratch test with one invalid program and one valid boundary case.
+  - Check whether C++17 and C++20 need distinct expectations.
+  - Use `-verify` annotations and keep each case small.
+deliverable: A stable scratch regression test that fails when its important expectation is removed or changed.
+checks:
+  - id: day-16-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-16-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-16-done
+    label: "Done when: A stable scratch regression test that fails when its important expectation is removed or changed."
+    required: true
+  - id: day-16-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: How could an overly broad diagnostic match allow the wrong behavior to pass?

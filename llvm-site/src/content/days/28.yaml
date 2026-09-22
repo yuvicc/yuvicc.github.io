@@ -1,0 +1,40 @@
+day: 28
+slug: "28"
+title: Prepare and submit a reviewable contribution
+phase: contribution
+toolchain: main
+prerequisites:
+  - 27
+minutes:
+  reading: 25
+  practice: 95
+  verification: 20
+  notes: 10
+goals:
+  - Problem, cause, fix, regression proof and review questions.
+reading:
+  - resourceId: R14
+    section: Current submission and attribution rules (R14 and R16)
+    minutes: 25
+    also:
+      - R16
+steps:
+  - Update against current main safely, rebuild and retest if necessary.
+  - Write the PR description yourself using the checklist.
+  - Open a PR when ready, or a clearly scoped draft with specific unresolved questions.
+  - A documented reproducer or useful documentation PR is an acceptable smaller outcome.
+deliverable: A submitted PR or other substantive contribution, with truthful validation results and no claimed merge guarantee.
+checks:
+  - id: day-28-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-28-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-28-done
+    label: "Done when: A submitted PR or other substantive contribution, with truthful validation results and no claimed merge guarantee."
+    required: true
+  - id: day-28-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Can you answer a reviewer’s why question about every changed line?

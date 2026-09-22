@@ -20,7 +20,8 @@ plugins:
 # Excluded items can be processed by explicitly listing the directories or
 # their entries' file path in the `include:` list.
 #
-# exclude:
+exclude:
+  - llvm-site/ # the Astro study site, built separately into /llvm/
 #   - .sass-cache/
 #   - .jekyll-cache/
 #   - gemfiles/

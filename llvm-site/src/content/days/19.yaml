@@ -1,0 +1,40 @@
+day: 19
+slug: "19"
+title: Debug the frontend
+phase: clang
+toolchain: main
+prerequisites:
+  - 18
+minutes:
+  reading: 30
+  practice: 90
+  verification: 20
+  notes: 10
+goals:
+  - Breakpoints, call stacks and a small reproducer.
+reading:
+  - resourceId: R11
+    section: Debugging guidance
+    minutes: 15
+  - resourceId: notes
+    section: Review your day 18 source map
+    minutes: 15
+steps:
+  - Using a build with debug symbols, stop in the checking function for a minimal example.
+  - Inspect the relevant expression or type and record the call stack.
+  - If symbols or memory block debugging, trace the same path manually and schedule a narrow debug build.
+deliverable: A debugger transcript or an explicit manual trace with the unresolved debugging limitation recorded.
+checks:
+  - id: day-19-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-19-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-19-done
+    label: "Done when: A debugger transcript or an explicit manual trace with the unresolved debugging limitation recorded."
+    required: true
+  - id: day-19-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: What extra information did the stack reveal beyond a text search?

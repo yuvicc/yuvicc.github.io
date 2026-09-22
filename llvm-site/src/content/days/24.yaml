@@ -1,0 +1,38 @@
+day: 24
+slug: "24"
+title: Locate the smallest responsible code path
+phase: contribution
+toolchain: main
+prerequisites:
+  - 23
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - A hypothesis before a patch.
+reading:
+  - resourceId: checkout
+    section: The relevant implementation and two adjacent tests
+    minutes: 40
+steps:
+  - Trace the reproducer to one checking or reporting path.
+  - Write a proposed change and the cases it might affect.
+  - If the issue needs unfamiliar template machinery or a large redesign, choose a smaller fallback now.
+  - Ask a focused question only after recording your investigation.
+deliverable: A patch hypothesis, candidate files and a boundary-case list; no speculative broad refactor.
+checks:
+  - id: day-24-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-24-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-24-done
+    label: "Done when: A patch hypothesis, candidate files and a boundary-case list; no speculative broad refactor."
+    required: true
+  - id: day-24-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: What counterexample would show that your proposed fix is too broad?

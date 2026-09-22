@@ -1,0 +1,45 @@
+day: 4
+slug: "04"
+title: Represent syntax with trees
+phase: foundations
+toolchain: host
+prerequisites:
+  - 3
+minutes:
+  reading: 45
+  practice: 75
+  verification: 20
+  notes: 10
+goals:
+  - Grammar, precedence, associativity and AST ownership.
+reading:
+  - resourceId: R1
+    section: "Chapter 2: syntax analysis"
+    minutes: 25
+  - resourceId: R1
+    section: "Chapter 3: AST and parser discussion"
+    minutes: 20
+steps:
+  - Write a small grammar and C++ AST nodes for literals, names and binary expressions.
+  - Use explicit ownership such as `unique_ptr`.
+  - Hand-draw trees for 2 + 3 * 4 and (2 + 3) * 4, then add an AST printer.
+deliverable: An AST printer and a written grammar in the learning repository.
+checks:
+  - id: day-04-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-04-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-04-done
+    label: "Done when: An AST printer and a written grammar in the learning repository."
+    required: true
+  - id: day-04-recall
+    label: Answered the recall question in my own words
+    required: true
+  - id: day-04-optional
+    label: Tried the optional work
+    required: false
+recallQuestion: Why are the trees for those two expressions different?
+optional:
+  - Add a unary-minus AST node.

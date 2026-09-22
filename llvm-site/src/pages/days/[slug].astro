@@ -1,0 +1,371 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import DayNav from '../../components/DayNav.astro';
+import Inline from '../../components/Inline.astro';
+import { getResource } from '../../data/resources.ts';
+import { TOOLCHAIN_NOTES, phaseInfo, dayUrl, url } from '../../data/site.ts';
+import { noteKeyForDay } from '../../lib/progress.ts';
+
+export async function getStaticPaths() {
+  const days = (await getCollection('days')).map((e) => e.data).sort((a, b) => a.day - b.day);
+  return days.map((day, i) => ({
+    params: { slug: day.slug },
+    props: { day, prev: days[i - 1], next: days[i + 1], all: days },
+  }));
+}
+
+const { day, prev, next, all } = Astro.props;
+const phase = phaseInfo(day.phase);
+const tool = TOOLCHAIN_NOTES[day.toolchain];
+const total = day.minutes.reading + day.minutes.practice + day.minutes.verification + day.minutes.notes;
+const byNumber = new Map(all.map((d) => [d.day, d]));
+const requiredChecks = day.checks.filter((c) => c.required);
+const optionalChecks = day.checks.filter((c) => !c.required);
+const noteKey = noteKeyForDay(day.slug);
+
+const resourceHref = (id: string) => {
+  const res = getResource(id);
+  return res.internalPath ? url(res.internalPath) : url(`resources/#${id.toLowerCase()}`);
+};
+
+const NOTE_PROMPTS = [
+  'Study day and actual date',
+  'Toolchain version or commit SHA when relevant',
+  'What I expected and what I observed',
+  'Files or commands that reproduce the result',
+  'One concept I can explain without notes',
+  'One uncertainty and the next concrete investigation',
+  'Completion evidence and optional public link',
+];
+const noteTemplate = NOTE_PROMPTS.map((p) => `${p}:\n`).join('\n');
+---
+
+<Base title={`Day ${day.slug}: ${day.title}`} description={`Day ${day.slug} of 30. ${day.goals[0]}`} section="days">
+  <div class="day-layout" data-day-page={day.slug}>
+    <aside class="day-aside no-print">
+      <DayNav days={all} current={day.day} />
+    </aside>
+
+    <article class="lesson prose" aria-labelledby="lesson-title">
+      <p class="eyebrow">
+        Day {day.slug} of 30 · <a href={url(`roadmap/#phase-${phase.id}`)}>{phase.label}</a>
+      </p>
+      <h1 id="lesson-title">{day.title}</h1>
+
+      <div class="lesson-meta">
+        <span class="status js-only" data-day-status={day.slug}></span>
+        {day.checkpoint && <span class="tag checkpoint">Checkpoint {day.checkpoint}</span>}
+        <span class="js-only small muted" data-planned-date={day.day}></span>
+      </div>
+
+      <dl class="facts">
+        <div>
+          <dt>Time</dt>
+          <dd>
+            About {total} minutes: {day.minutes.reading} reading, {day.minutes.practice} lab, {day.minutes.verification} testing,{' '}
+            {day.minutes.notes} notes.
+          </dd>
+        </div>
+        <div>
+          <dt>Prerequisites</dt>
+          <dd>
+            {
+              day.prerequisites.length === 0
+                ? 'None. Start here.'
+                : day.prerequisites.map((p, i) => (
+                    <>
+                      {i > 0 && ', '}
+                      <a href={dayUrl(byNumber.get(p)!.slug)}>
+                        Day {byNumber.get(p)!.slug}: {byNumber.get(p)!.title}
+                      </a>
+                    </>
+                  ))
+            }
+          </dd>
+        </div>
+      </dl>
+
+      <div class="callout" role="note">
+        <p class="callout-title">{tool.label}</p>
+        <p>{tool.text} <a href={url('setup/')}>Setup guide</a></p>
+      </div>
+
+      <section aria-labelledby="goals">
+        <h2 id="goals">Learn</h2>
+        <ul>
+          {day.goals.map((g) => <li><Inline text={g} /></li>)}
+        </ul>
+      </section>
+
+      <section aria-labelledby="reading">
+        <h2 id="reading"><span class="tag read">Read</span> Reading</h2>
+        <ul class="reading-list">
+          {
+            day.reading.map((item) => {
+              const res = getResource(item.resourceId);
+              return (
+                <li>
+                  <a href={resourceHref(item.resourceId)}>
+                    <span class="rid">{res.id.startsWith('R') ? `${res.id} · ` : ''}</span>
+                    {res.title}
+                  </a>
+                  {item.also?.map((id) => (
+                    <>
+                      {' + '}
+                      <a href={resourceHref(id)}>{getResource(id).id.startsWith('R') ? id : getResource(id).title}</a>
+                    </>
+                  ))}
+                  <br />
+                  <span>{item.section}</span>
+                  {item.minutes && (
+                    <span class="muted">
+                      {' '}
+                      · {item.upTo ? 'up to ' : ''}
+                      {item.minutes} min
+                    </span>
+                  )}
+                </li>
+              );
+            })
+          }
+        </ul>
+        <p class="small muted">Reading budgets cover selected sections, not whole chapters. Link to the book; this site does not reproduce it.</p>
+      </section>
+
+      <section aria-labelledby="steps">
+        <h2 id="steps"><span class="tag build">Build</span> Build or investigate</h2>
+        <ol class="steps">
+          {day.steps.map((s) => <li><Inline text={s} /></li>)}
+        </ol>
+      </section>
+
+      <section aria-labelledby="deliverable">
+        <h2 id="deliverable">Done when</h2>
+        <p class="deliverable"><Inline text={day.deliverable} /></p>
+      </section>
+
+      <section aria-labelledby="recall">
+        <h2 id="recall">Recall question</h2>
+        <blockquote class="recall"><p>{day.recallQuestion}</p></blockquote>
+      </section>
+
+      {
+        day.optional && (
+          <section aria-labelledby="optional">
+            <h2 id="optional">Optional</h2>
+            <ul>
+              {day.optional.map((o) => (
+                <li>
+                  <Inline text={o} />
+                </li>
+              ))}
+            </ul>
+            <p class="small muted">Optional work never counts toward completion.</p>
+          </section>
+        )
+      }
+
+      <section aria-labelledby="checks" class="checks-section">
+        <h2 id="checks">Completion checks</h2>
+        <p class="no-js-only small muted">Progress tracking needs JavaScript. The lesson above is complete without it.</p>
+        <p class="small muted js-only" data-storage-warning hidden></p>
+        <form class="checks" data-checks-form onsubmit="return false">
+          <fieldset>
+            <legend>Required to complete day {day.slug}</legend>
+            {
+              requiredChecks.map((c) => (
+                <label class="check">
+                  <input type="checkbox" data-check-id={c.id} disabled />
+                  <span>
+                    <Inline text={c.label} />
+                  </span>
+                </label>
+              ))
+            }
+          </fieldset>
+          {
+            optionalChecks.length > 0 && (
+              <fieldset>
+                <legend>Optional (not counted)</legend>
+                {optionalChecks.map((c) => (
+                  <label class="check">
+                    <input type="checkbox" data-check-id={c.id} disabled />
+                    <span>{c.label}</span>
+                  </label>
+                ))}
+              </fieldset>
+            )
+          }
+        </form>
+      </section>
+
+      <section aria-labelledby="notes-heading" class="notes-section">
+        <h2 id="notes-heading">Notes</h2>
+        <p class="small muted">
+          Saved only in this browser. Keep it short enough to finish in ten minutes; none of the prompts are required.{' '}
+          <a href={url('notes/')}>All notes, export and import</a>
+        </p>
+        <label for={`note-${noteKey}`} class="visually-hidden">Notes for day {day.slug}</label>
+        <textarea
+          id={`note-${noteKey}`}
+          data-note-key={noteKey}
+          data-note-template={noteTemplate}
+          placeholder={noteTemplate}
+          rows="12"
+          disabled></textarea>
+        <div class="button-row js-only">
+          <button type="button" data-insert-template={noteKey}>Insert prompts</button>
+          <button type="button" data-copy-note={noteKey}>Copy notes</button>
+          <span class="live-status muted" data-note-status={noteKey}></span>
+        </div>
+      </section>
+
+      <nav class="pager no-print" aria-label="Previous and next day">
+        {
+          prev ? (
+            <a class="button" href={dayUrl(prev.slug)} rel="prev">
+              ← Day {prev.slug}: {prev.title}
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          next ? (
+            <a class="button" href={dayUrl(next.slug)} rel="next">
+              Day {next.slug}: {next.title} →
+            </a>
+          ) : (
+            <a class="button" href={url('roadmap/#after-day-30')}>
+              After day 30 →
+            </a>
+          )
+        }
+      </nav>
+    </article>
+  </div>
+</Base>
+
+<style>
+  .day-layout {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 56rem) {
+    .day-layout {
+      grid-template-columns: 16rem minmax(0, 1fr);
+      gap: 2.5rem;
+    }
+    .day-aside {
+      position: sticky;
+      top: 1rem;
+      align-self: start;
+      max-height: calc(100vh - 2rem);
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+  }
+  @media (max-width: 55.99rem) {
+    .day-aside {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+  }
+  .lesson-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.9rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .facts {
+    margin: 0 0 1.25rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .facts div {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 0.75rem;
+  }
+  @media (max-width: 30rem) {
+    .facts div {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+  .facts dt {
+    font-weight: 700;
+  }
+  .facts dd {
+    margin: 0;
+  }
+  .reading-list li {
+    margin-bottom: 0.6rem;
+  }
+  .rid {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+  .steps li {
+    margin-bottom: 0.5rem;
+  }
+  .deliverable {
+    border-left: 4px solid var(--ok);
+    padding: 0.5rem 0.9rem;
+    background: var(--surface);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-weight: 500;
+  }
+  .recall {
+    margin: 0 0 1rem;
+    padding: 0.6rem 1rem;
+    border-left: 4px solid var(--border);
+    font-style: italic;
+  }
+  .recall p {
+    margin: 0;
+  }
+  .checks fieldset {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem 0.75rem;
+    margin: 0 0 1rem;
+    background: var(--surface);
+  }
+  .checks legend {
+    font-weight: 700;
+    padding: 0 0.35rem;
+  }
+  .check {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+    gap: 0.5rem;
+    align-items: start;
+    padding: 0.35rem 0;
+    cursor: pointer;
+  }
+  .check input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.2rem;
+    accent-color: var(--accent);
+  }
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+  .pager .button {
+    max-width: 100%;
+  }
+  @media print {
+    .checks-section,
+    .notes-section {
+      display: none;
+    }
+  }
+</style>

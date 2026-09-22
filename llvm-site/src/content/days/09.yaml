@@ -1,0 +1,42 @@
+day: 9
+slug: "09"
+title: Generate IR from your AST
+phase: ir
+toolchain: llvm17
+prerequisites:
+  - 6
+  - 8
+minutes:
+  reading: 45
+  practice: 75
+  verification: 20
+  notes: 10
+goals:
+  - LLVMContext, Module, IRBuilder and the verification boundary.
+reading:
+  - resourceId: R1
+    section: "Chapter 4: AST-to-IR generation"
+    minutes: 35
+  - resourceId: R7
+    section: Tutorial chapter 3, as a reference only
+    minutes: 10
+steps:
+  - Extend the existing expression project to generate an i32-returning function using the LLVM 17 C++ API.
+  - Start with literals, addition and multiplication.
+  - Verify the module and print IR.
+  - Bind the build to the LLVM 17 CMake package.
+deliverable: The same frontend produces valid IR for three expressions; no second toy compiler is required.
+checks:
+  - id: day-09-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-09-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-09-done
+    label: "Done when: The same frontend produces valid IR for three expressions; no second toy compiler is required."
+    required: true
+  - id: day-09-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: What catches a malformed IR function before it reaches machine-code generation?

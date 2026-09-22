@@ -1,0 +1,44 @@
+day: 1
+slug: "01"
+title: Understand what a compiler does
+phase: foundations
+toolchain: llvm17
+prerequisites: []
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - Source code, frontend, intermediate representation, optimizer, backend, assembler and linker.
+reading:
+  - resourceId: R1
+    section: "Chapter 2: compiler building blocks"
+    minutes: 25
+  - resourceId: R3
+    section: Introductory compiler overview
+    minutes: 15
+steps:
+  - Use the pipeline commands in the setup section on a five-line C++ function.
+  - Save preprocessed source, LLVM IR, assembly and an object file.
+  - Write one sentence explaining each output.
+deliverable: A pipeline note and four output files; distinguish compiling from linking.
+checks:
+  - id: day-01-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-01-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-01-done
+    label: "Done when: A pipeline note and four output files; distinguish compiling from linking."
+    required: true
+  - id: day-01-recall
+    label: Answered the recall question in my own words
+    required: true
+  - id: day-01-optional
+    label: Tried the optional work
+    required: false
+recallQuestion: Why can the same frontend support more than one processor?
+optional:
+  - Inspect the driver commands with `clang++ -###`.

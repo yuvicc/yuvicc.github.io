@@ -1,0 +1,141 @@
+---
+import type { StudyDay } from '../content/schema.ts';
+import { PHASE_INFO, dayUrl } from '../data/site.ts';
+
+interface Props {
+  days: StudyDay[];
+  current: number;
+}
+const { days, current } = Astro.props;
+---
+
+<nav class="day-nav" aria-label="All study days">
+  <p class="day-nav-title">All 30 days <span class="js-only small muted" data-overall-short></span></p>
+  {
+    PHASE_INFO.map((phase) => (
+      <section class="day-nav-phase">
+        <h2 class="day-nav-heading">
+          {phase.label}{' '}
+          <span class="muted small">
+            <span class="js-only" data-phase-count={phase.id} />
+            <span class="no-js-only">
+              Days {phase.range[0]}–{phase.range[1]}
+            </span>
+          </span>
+        </h2>
+        <ol class="day-nav-list">
+          {days
+            .filter((d) => d.phase === phase.id)
+            .map((d) => (
+              <li>
+                <a
+                  href={dayUrl(d.slug)}
+                  aria-current={d.day === current ? 'page' : undefined}
+                  data-day-link={d.slug}
+                  title={`Day ${d.slug}: ${d.title}`}
+                >
+                  <span class="n" aria-hidden="true">{d.slug}</span>
+                  <span class="t">
+                    <span class="visually-hidden-mobile">
+                      <span class="visually-hidden">Day {d.day}: </span>
+                      {d.title}
+                    </span>
+                  </span>
+                  <span class="mark" data-day-mark={d.slug} />
+                </a>
+              </li>
+            ))}
+        </ol>
+      </section>
+    ))
+  }
+</nav>
+
+<style>
+  .day-nav {
+    font-size: 0.92rem;
+  }
+  .day-nav-title {
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+  }
+  .day-nav-heading > span {
+    display: block;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .day-nav-heading {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0.9rem 0 0.3rem;
+    color: var(--muted);
+  }
+  .day-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .day-nav-list a {
+    display: grid;
+    grid-template-columns: 1.9rem 1fr auto;
+    gap: 0.4rem;
+    padding: 0.3rem 0.4rem;
+    border-radius: 4px;
+    color: var(--text);
+    text-decoration: none;
+    line-height: 1.35;
+  }
+  .day-nav-list a:hover {
+    background: var(--surface-2);
+  }
+  .day-nav-list a[aria-current='page'] {
+    background: var(--accent-soft);
+    outline: 1px solid var(--accent);
+    font-weight: 600;
+  }
+  .n {
+    font-family: var(--font-mono);
+    color: var(--muted);
+  }
+  .mark {
+    font-size: 0.8rem;
+    color: var(--ok);
+  }
+
+  /* Mobile: compact grid of day numbers above the lesson. */
+  @media (max-width: 55.99rem) {
+    .day-nav-phase {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    .day-nav-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .day-nav-list a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.15rem;
+      min-width: 2.75rem;
+      min-height: 2.75rem;
+      padding: 0.2rem 0.35rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .n {
+      color: var(--text);
+    }
+    .visually-hidden-mobile {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+  }
+</style>

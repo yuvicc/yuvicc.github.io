@@ -1,0 +1,123 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import { url, dayUrl } from '../../data/site.ts';
+
+const litCommands = String.raw`
+build/bin/llvm-lit -sv clang/test/SemaCXX/<test>.cpp
+build/bin/llvm-lit -sv clang/test/SemaCXX
+cmake --build build --target check-clang --parallel 2
+git diff --check`;
+
+const sampleTest = String.raw`
+// RUN: %clang_cc1 -std=c++17 -fsyntax-only -verify %s
+int f() {
+  return missing; // expected-error {{use of undeclared identifier 'missing'}}
+}`;
+
+const CHECKLIST = [
+  'The problem, expected behavior and observed behavior are explicit.',
+  'The patch is based on current main and contains one logical change.',
+  'The implementation fits the existing subsystem and nearby conventions.',
+  'Regression evidence or a clear documentation/coverage rationale is included.',
+  'Relevant tests are run; commands, results and limitations are recorded.',
+  'Formatting is limited to touched code and the diff contains no unrelated files.',
+  'The description explains motivation, approach, impact and open questions.',
+  'You understand the patch and can respond to technical feedback yourself.',
+];
+---
+
+<Base title="Contributing" description="Selecting an issue, the Clang test workflow and a pull request readiness checklist." section="contributing">
+  <div class="prose">
+    <h1>Contributing</h1>
+    <p class="lead">Choosing, testing and submitting a first Clang contribution (days 22–30).</p>
+
+    <div class="callout warn" role="note">
+      <p class="callout-title">AI tools and LLVM contributions</p>
+      <p>
+        LLVM contribution work has its own rules. At the time of source review, LLVM requires human review and accountability,
+        transparent labelling of substantial generated content, and prohibits AI tools from fixing issues labelled good first issue.
+        Read the <a href={url('resources/#r16')}>AI tool use policy (R16)</a> again before selecting or submitting work. For such
+        issues, implement and investigate the fix manually. That this website was generated with AI help does not waive the
+        restriction.
+      </p>
+    </div>
+
+    <h2 id="selecting">Selecting and preparing a contribution</h2>
+    <p>
+      Choose one item with a minimal reproducer, understandable expected behavior, a likely local implementation point and tests you
+      can run. A small patch is useful only if it resolves a real problem or adds justified coverage. Search issue and PR history
+      before beginning. Labels can help discovery but do not prove that work is available, easy or still relevant. Select a live issue
+      when you reach <a href={dayUrl('22')}>day 22</a>, not before.
+    </p>
+    <p>
+      For a behavior-changing patch, show that the new regression test fails before the fix and passes after it. For a coverage-only
+      patch, explain the gap and demonstrate that the test checks the intended property. For documentation, validate the documented
+      workflow where feasible. Record baseline failures and limitations honestly.
+    </p>
+    <p>
+      Avoid a first patch involving large refactors, ABI changes, broad template deduction rules, concepts, modules or code
+      generation for a new architecture. Useful fallbacks include reducing a report, finding the responsible code path, correcting
+      misleading instructions or strengthening a nearby test. If expected C++ behavior remains unclear, ask with a minimal example and
+      a specific question (<a href={url('resources/#r18')}>R18</a>).
+    </p>
+
+    <h2 id="testing">Commands for Clang testing</h2>
+    <p>
+      Run from the llvm-main checkout after building test dependencies with <code>check-clang</code>. Replace the filename placeholder
+      with an existing test you have located, or your new test. A complete suite can be expensive; use the focused command while
+      iterating.
+    </p>
+  </div>
+  <CodeBlock code={litCommands} lang="bash" label="lit and check-clang" />
+  <div class="prose">
+    <p>
+      A tiny diagnostic test can use the following content. Place it in a local scratch test under the configured Clang test tree, run
+      it with lit, and keep it out of a PR unless it supplies useful coverage. Check the diagnostic spelling against the actual
+      compiler under test.
+    </p>
+  </div>
+  <CodeBlock code={sampleTest} lang="cpp" label="Scratch -verify test" />
+  <div class="prose">
+    <p>
+      For other examples, annotate expected notes as well as errors using the actual compiler output. RUN substitutions belong to
+      lit. Do not substitute the system compiler into an upstream test or treat an unsupported test as passing coverage.
+    </p>
+
+    <h2 id="checklist">Pull request readiness checklist</h2>
+    <ul class="checklist">
+      {CHECKLIST.map((item) => <li>{item}</li>)}
+    </ul>
+    <p>
+      LLVM uses GitHub pull requests; follow the current <a href={url('resources/#r14')}>GitHub guide (R14)</a>. Write the description
+      in your own words. Include the issue link when applicable, the minimal example, the cause, the fix and testing. A draft should
+      identify concrete unfinished work rather than transfer an unexplained debugging task to reviewers. Respond to review without
+      treating day 30 as a merge deadline.
+    </p>
+
+    <h2 id="public-notes">Public learning notes</h2>
+    <p>
+      Publish your own explanations and exercise code with appropriate attribution. Link to the purchased book; do not reproduce its
+      chapters. Keep private notes private unless you deliberately publish them. Record a PR as submitted, under review, merged or
+      closed according to its actual state.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+  .checklist li {
+    padding-left: 1.6rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+  .checklist li::before {
+    content: '☐';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,42 @@
+day: 15
+slug: "15"
+title: Learn the LLVM regression test workflow
+phase: clang
+toolchain: main
+prerequisites:
+  - 2
+  - 13
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - lit, RUN lines, substitutions and diagnostic expectations.
+reading:
+  - resourceId: R10
+    section: Regression testing
+    minutes: 25
+  - resourceId: R11
+    section: Testing and debugging sections; prefer the current CMake workflow
+    minutes: 15
+steps:
+  - Build Clang test dependencies.
+  - Run one existing SemaCXX test through `build/bin/llvm-lit`.
+  - Make a temporary scratch test with the diagnostic example in the commands section.
+  - Deliberately break its expected message, observe failure, then restore it.
+deliverable: A recorded passing and intentionally failing lit run, including the exact compiler path.
+checks:
+  - id: day-15-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-15-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-15-done
+    label: "Done when: A recorded passing and intentionally failing lit run, including the exact compiler path."
+    required: true
+  - id: day-15-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Why should %clang_cc1 appear in a test RUN line rather than be typed into your shell?

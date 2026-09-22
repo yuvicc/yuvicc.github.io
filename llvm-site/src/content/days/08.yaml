@@ -1,0 +1,40 @@
+day: 8
+slug: "08"
+title: Read LLVM intermediate representation
+phase: ir
+toolchain: llvm17
+prerequisites:
+  - 7
+minutes:
+  reading: 45
+  practice: 75
+  verification: 20
+  notes: 10
+goals:
+  - Modules, functions, blocks, instructions, types and SSA values.
+reading:
+  - resourceId: R1
+    section: "Chapter 4: first IR generation discussion"
+    minutes: 25
+  - resourceId: R6
+    section: Functions, basic blocks and arithmetic instructions
+    minutes: 20
+steps:
+  - Use LLVM 17 Clang to emit IR for two tiny C++ functions.
+  - Annotate arguments, return type, basic block and instructions.
+  - Handwrite a small i32 function and check it with `llvm-as` and `opt` verification.
+deliverable: An annotated .ll file and a verifier-clean handwritten function.
+checks:
+  - id: day-08-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-08-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-08-done
+    label: "Done when: An annotated .ll file and a verifier-clean handwritten function."
+    required: true
+  - id: day-08-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Why is an LLVM SSA value different from a mutable C++ local variable?

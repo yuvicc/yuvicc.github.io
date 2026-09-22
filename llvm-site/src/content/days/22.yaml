@@ -1,0 +1,45 @@
+day: 22
+slug: "22"
+title: Choose a small useful contribution
+phase: contribution
+toolchain: main
+prerequisites:
+  - 21
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - Issue triage and scope selection.
+reading:
+  - resourceId: R13
+    section: Contribution options (R13); current issues and related pull requests (R17)
+    minutes: 40
+    also:
+      - R17
+steps:
+  - Shortlist up to three items.
+  - Confirm each remains open, reproduce on current main, look for duplicates or active work, and identify likely tests.
+  - Prefer a narrowly understood diagnostic fix, regression-test gap or actionable documentation correction.
+  - Select one and write the reason.
+deliverable: An issue-selection note with scope, reproduction, expected benefit and likely files.
+checks:
+  - id: day-22-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-22-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-22-done
+    label: "Done when: An issue-selection note with scope, reproduction, expected benefit and likely files."
+    required: true
+  - id: day-22-recall
+    label: Answered the recall question in my own words
+    required: true
+  - id: day-22-optional
+    label: Tried the optional work
+    required: false
+recallQuestion: Could this change be described and reviewed without explaining a new language feature?
+optional:
+  - For a good-first-issue label, work manually and follow the AI restriction in R16.

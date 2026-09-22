@@ -1,0 +1,49 @@
+day: 11
+slug: "11"
+title: Understand control flow and optimization
+phase: ir
+toolchain: llvm17
+prerequisites:
+  - 10
+minutes:
+  reading: 45
+  practice: 75
+  verification: 20
+  notes: 10
+goals:
+  - Branches, phi nodes, memory operations and transformation passes.
+reading:
+  - resourceId: R1
+    section: "Chapter 7: pass-manager overview"
+    minutes: 20
+  - resourceId: R6
+    section: br and phi
+    minutes: 15
+  - resourceId: R7
+    section: Control-flow discussion
+    minutes: 10
+steps:
+  - Handwrite a function choosing one of two values with a branch and phi.
+  - Verify and run it.
+  - Run an optimization pipeline on a separate arithmetic example and inspect the diff.
+  - Keep source-language control flow out of the toy project today.
+deliverable: A valid control-flow example and a short before/after IR explanation.
+checks:
+  - id: day-11-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-11-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-11-done
+    label: "Done when: A valid control-flow example and a short before/after IR explanation."
+    required: true
+  - id: day-11-recall
+    label: Answered the recall question in my own words
+    required: true
+  - id: day-11-optional
+    label: Tried the optional work
+    required: false
+recallQuestion: What does a phi input’s predecessor block tell you?
+optional:
+  - Add if expressions to the toy language after the core tasks pass.

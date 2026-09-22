@@ -1,0 +1,41 @@
+day: 17
+slug: "17"
+title: Use FileCheck and trace a diagnostic
+phase: clang
+toolchain: main
+prerequisites:
+  - 16
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - Textual output assertions and the diagnostic definition chain.
+reading:
+  - resourceId: R12
+    section: Basic checks, labels and captures
+    minutes: 25
+  - resourceId: R1
+    section: "Chapter 8: TableGen introduction, skim"
+    minutes: 15
+steps:
+  - Read an existing AST or CodeGen test using FileCheck.
+  - Make a scratch check for one meaningful output property.
+  - Trace yesterday’s diagnostic through a `.td` definition and a Sema call site.
+  - Avoid checks against unstable addresses or SSA numbering.
+deliverable: One focused FileCheck test and a trace from diagnostic ID to source location.
+checks:
+  - id: day-17-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-17-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-17-done
+    label: "Done when: One focused FileCheck test and a trace from diagnostic ID to source location."
+    required: true
+  - id: day-17-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: When is -verify a better fit than checking stderr with FileCheck?

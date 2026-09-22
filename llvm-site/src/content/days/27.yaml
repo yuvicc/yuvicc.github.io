@@ -1,0 +1,40 @@
+day: 27
+slug: "27"
+title: Test the effect beyond the reproducer
+phase: contribution
+toolchain: main
+prerequisites:
+  - 26
+minutes:
+  reading: 20
+  practice: 100
+  verification: 20
+  notes: 10
+goals:
+  - Relevant suites, baseline comparison and practical validation.
+reading:
+  - resourceId: checkout
+    section: The component's test requirements and the PR readiness checklist
+    minutes: 20
+    also:
+      - checklist
+steps:
+  - Run the individual test, neighboring directory and `check-clang` when feasible.
+  - Run affected unit tests when applicable.
+  - Compare failures against an unchanged baseline; record unsupported tests separately.
+  - Format only the changed code and inspect `git diff --check`.
+deliverable: Exact test commands and results, known limitations, and a clean focused diff.
+checks:
+  - id: day-27-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-27-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-27-done
+    label: "Done when: Exact test commands and results, known limitations, and a clean focused diff."
+    required: true
+  - id: day-27-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Which behavior could your regression test miss that the broader suite might catch?

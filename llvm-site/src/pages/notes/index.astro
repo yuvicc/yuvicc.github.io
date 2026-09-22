@@ -1,0 +1,144 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { dayUrl } from '../../data/site.ts';
+import { GENERAL_NOTE, noteKeyForDay, LIMITS } from '../../lib/progress.ts';
+
+const days = (await getCollection('days')).map((e) => e.data).sort((a, b) => a.day - b.day);
+const NOTE_PROMPTS = [
+  'Study day and actual date',
+  'Toolchain version or commit SHA when relevant',
+  'What I expected and what I observed',
+  'Files or commands that reproduce the result',
+  'One concept I can explain without notes',
+  'One uncertainty and the next concrete investigation',
+  'Completion evidence and optional public link',
+];
+const noteTemplate = NOTE_PROMPTS.map((p) => `${p}:\n`).join('\n');
+---
+
+<Base title="Notes and progress" description="Private browser-stored notes and progress, with export, import and reset." section="notes">
+  <div class="prose">
+    <h1>Notes and progress</h1>
+    <p class="lead">Private notes, your start date, and backups of everything you have recorded.</p>
+
+    <div class="callout warn" role="note">
+      <p class="callout-title">Where this data lives</p>
+      <p>
+        Progress, settings and notes are stored in this browser’s local storage for this site’s origin only. They are not sent
+        anywhere, do not sync across devices or browsers, and can be cleared by the browser or by clearing site data. Export a backup
+        regularly. If this site moves to a different domain, export here first and import on the new address.
+      </p>
+    </div>
+    <p class="no-js-only">Notes, progress and backups need JavaScript. All lessons remain readable without it.</p>
+    <p class="js-only" data-storage-warning hidden></p>
+
+    <section aria-labelledby="summary-heading" class="js-only">
+      <h2 id="summary-heading">Progress</h2>
+      <p data-overall-text></p>
+      <div class="progress-bar" aria-hidden="true"><span data-overall-bar></span></div>
+      <ul class="phase-counts">
+        <li>Compiler foundations: <span data-phase-count="foundations"></span></li>
+        <li>LLVM IR: <span data-phase-count="ir"></span></li>
+        <li>Clang frontend: <span data-phase-count="clang"></span></li>
+        <li>First contribution: <span data-phase-count="contribution"></span></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="schedule-heading" class="js-only">
+      <h2 id="schedule-heading">Calendar (optional)</h2>
+      <p>
+        Lessons use study-day numbers. Set a start date to see a planned local date on each day. Changing or clearing it never
+        touches your progress, and missing a day does not erase anything.
+      </p>
+      <form class="button-row" data-start-form onsubmit="return false">
+        <label for="start-date">Start date</label>
+        <input type="date" id="start-date" data-start-date disabled />
+        <button type="button" data-clear-start disabled>Clear date</button>
+        <span class="live-status muted" data-start-status></span>
+      </form>
+    </section>
+
+    <section aria-labelledby="backup-heading" class="js-only">
+      <h2 id="backup-heading">Backup</h2>
+      <p>
+        Export saves progress, settings and notes as one JSON file. Import validates the file first and, after you confirm, replaces
+        what is stored here. A file that fails validation changes nothing. Imports are limited to {LIMITS.maxImportChars.toLocaleString('en')} characters and {LIMITS.maxNoteChars.toLocaleString('en')} characters per note.
+      </p>
+      <div class="button-row">
+        <button type="button" class="primary" data-export disabled>Export JSON</button>
+        <label class="button file-button">
+          Import JSON
+          <input type="file" accept="application/json,.json" data-import class="visually-hidden" disabled />
+        </label>
+        <button type="button" class="danger" data-reset disabled>Reset everything</button>
+      </div>
+      <div class="live-status" role="status" aria-live="polite" data-backup-status></div>
+    </section>
+
+    <section aria-labelledby="general-heading">
+      <h2 id="general-heading">General notes</h2>
+      <label for={`note-${GENERAL_NOTE}`} class="visually-hidden">General notes</label>
+      <textarea id={`note-${GENERAL_NOTE}`} data-note-key={GENERAL_NOTE} rows="8" disabled
+        placeholder="Anything that is not tied to a single day: environment details, open questions, links."></textarea>
+      <div class="button-row js-only">
+        <button type="button" data-copy-note={GENERAL_NOTE}>Copy notes</button>
+        <span class="live-status muted" data-note-status={GENERAL_NOTE}></span>
+      </div>
+    </section>
+
+    <section aria-labelledby="template-heading">
+      <h2 id="template-heading">Daily note template</h2>
+      <p>Keep it short enough to complete in ten minutes. None of the prompts are required.</p>
+      <ul>{NOTE_PROMPTS.map((p) => <li>{p}</li>)}</ul>
+    </section>
+
+    <section aria-labelledby="daily-heading">
+      <h2 id="daily-heading">Daily notes</h2>
+      <p class="small muted">Each day’s notes are also on its lesson page.</p>
+      {
+        days.map((d) => {
+          const key = noteKeyForDay(d.slug);
+          return (
+            <details class="day-note" data-note-details={key}>
+              <summary>
+                Day {d.slug}: {d.title} <span class="muted small js-only" data-note-summary={key} />
+              </summary>
+              <p class="small">
+                <a href={dayUrl(d.slug)}>Open the lesson</a>
+              </p>
+              <label for={`note-${key}`} class="visually-hidden">
+                Notes for day {d.slug}
+              </label>
+              <textarea id={`note-${key}`} data-note-key={key} data-note-template={noteTemplate} placeholder={noteTemplate} rows="10" disabled />
+              <div class="button-row js-only">
+                <button type="button" data-insert-template={key}>Insert prompts</button>
+                <button type="button" data-copy-note={key}>Copy notes</button>
+                <span class="live-status muted" data-note-status={key} />
+              </div>
+            </details>
+          );
+        })
+      }
+    </section>
+  </div>
+</Base>
+
+<style>
+  .day-note {
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 0;
+  }
+  .day-note summary {
+    cursor: pointer;
+    padding: 0.3rem 0;
+    font-weight: 600;
+  }
+  .file-button:focus-within {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .phase-counts {
+    padding-left: 1.2rem;
+  }
+</style>

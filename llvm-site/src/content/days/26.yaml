@@ -1,0 +1,40 @@
+day: 26
+slug: "26"
+title: Implement the smallest correct change
+phase: contribution
+toolchain: main
+prerequisites:
+  - 25
+minutes:
+  reading: 25
+  practice: 95
+  verification: 20
+  notes: 10
+goals:
+  - Local reasoning, existing conventions and narrow scope.
+reading:
+  - resourceId: R15
+    section: Relevant conventions; the neighboring implementation
+    minutes: 25
+    also:
+      - checkout
+steps:
+  - Implement your proposed fix, rebuild the affected compiler target, and run the new test.
+  - Recheck the boundary cases.
+  - Keep unrelated cleanups out of the diff.
+  - If correctness remains uncertain, preserve the reproducer and investigation rather than forcing a patch.
+deliverable: A locally passing fix with an explanation for each changed condition, or a useful investigation ready to share.
+checks:
+  - id: day-26-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-26-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-26-done
+    label: "Done when: A locally passing fix with an explanation for each changed condition, or a useful investigation ready to share."
+    required: true
+  - id: day-26-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Why is this the right layer to fix the problem?

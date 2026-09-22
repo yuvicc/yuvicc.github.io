@@ -1,0 +1,39 @@
+day: 30
+slug: "30"
+title: Publish a learning retrospective and choose the next month
+phase: contribution
+toolchain: main
+checkpoint: D
+prerequisites:
+  - 29
+minutes:
+  reading: 30
+  practice: 90
+  verification: 20
+  notes: 10
+goals:
+  - Evidence of readiness and a sustainable contribution loop.
+reading:
+  - resourceId: notes
+    section: Review notes and unfinished reading; choose the next two weeks
+    minutes: 30
+steps:
+  - Record what you built, compiler versions, tests, contribution link and actual review status.
+  - Explain one compiler concept from memory.
+  - Choose one Clang subsystem and two follow-up tasks.
+  - Add a public learning summary only after removing local paths or private details you do not want published.
+deliverable: "Checkpoint D: a reproducible learning repository, an explainable contribution or investigation, and a follow-up plan."
+checks:
+  - id: day-30-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-30-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-30-done
+    label: "Done when: Checkpoint D: a reproducible learning repository, an explainable contribution or investigation, and a follow-up plan."
+    required: true
+  - id: day-30-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Which part can you now investigate independently, and which still needs guidance?

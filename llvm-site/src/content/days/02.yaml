@@ -1,0 +1,43 @@
+day: 2
+slug: "02"
+title: Prepare a reproducible learning environment
+phase: foundations
+toolchain: both
+prerequisites:
+  - 1
+minutes:
+  reading: 45
+  practice: 75
+  verification: 20
+  notes: 10
+goals:
+  - Tool versions, out-of-tree builds and the difference between LLVM 17 and current main.
+reading:
+  - resourceId: R1
+    section: "Chapter 1: prerequisites and build configuration"
+    minutes: 30
+  - resourceId: R4
+    section: Current build requirements (with R5)
+    minutes: 15
+    also:
+      - R5
+steps:
+  - Record OS, CPU, RAM, free disk and compiler versions.
+  - Set up LLVM 17 tools for book exercises.
+  - Create a separate current-main checkout and start a restricted Clang build using the recipe.
+  - Record its commit SHA.
+deliverable: Version log, separate build directories and a successful configure; a long build may continue in the background.
+checks:
+  - id: day-02-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-02-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-02-done
+    label: "Done when: Version log, separate build directories and a successful configure; a long build may continue in the background."
+    required: true
+  - id: day-02-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Which compiler builds Clang, and which Clang binary will you test?

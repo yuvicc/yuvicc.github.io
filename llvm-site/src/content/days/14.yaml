@@ -1,0 +1,41 @@
+day: 14
+slug: "14"
+title: Inspect C++ AST nodes and types
+phase: clang
+toolchain: main
+prerequisites:
+  - 13
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - Declarations, expressions, implicit conversions and QualType.
+reading:
+  - resourceId: R8
+    section: AST nodes and context
+    minutes: 20
+  - resourceId: R9
+    section: Types and AST sections
+    minutes: 20
+steps:
+  - Create three small C++ files using references, overloads and const qualification.
+  - Dump each AST with current-main Clang.
+  - Find `FunctionDecl`, `VarDecl`, `DeclRefExpr` and `ImplicitCastExpr` where applicable.
+  - Use the checkout’s declarations to understand unfamiliar nodes.
+deliverable: Three annotated examples and a note explaining one implicit conversion.
+checks:
+  - id: day-14-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-14-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-14-done
+    label: "Done when: Three annotated examples and a note explaining one implicit conversion."
+    required: true
+  - id: day-14-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: What information would be lost if you kept only the spelling of an expression?

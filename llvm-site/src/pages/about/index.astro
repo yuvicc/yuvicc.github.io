@@ -1,0 +1,55 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SOURCE_REVIEW_DATE } from '../../data/resources.ts';
+import { CURRICULUM_VERSION, url } from '../../data/site.ts';
+---
+
+<Base title="About" description="Scope, source review date and the independent-project statement for this study site." section="about">
+  <div class="prose">
+    <h1>About this site</h1>
+
+    <h2 id="scope">Scope</h2>
+    <p>
+      This plan takes a C++ developer with no compiler background through the foundations needed to begin contributing to Clang, the
+      C and C++ frontend in the LLVM project. The practical goal is a small, useful contribution that you understand and can test.
+    </p>
+    <p>
+      Clang parses and checks C++ and lowers it toward LLVM IR. LLVM provides optimization and machine-code infrastructure; libc++ is
+      the standard-library implementation. This plan targets Clang frontend work. Advanced optimization passes, new CPU backends, full
+      template semantics, modules, coroutines and ABI changes are later specializations.
+    </p>
+    <ul>
+      <li>Days 1–7: compiler concepts and a small expression frontend written in C++.</li>
+      <li>Days 8–12: basic LLVM IR and an end-to-end compiled toy program.</li>
+      <li>Days 13–21: Clang source navigation, C++ diagnostics and regression tests.</li>
+      <li>Days 22–30: select, investigate, test and submit a small contribution.</li>
+    </ul>
+
+    <h2 id="sources">Sources and review date</h2>
+    <p>
+      Source review date: {SOURCE_REVIEW_DATE}. Curriculum version: {CURRICULUM_VERSION}. Live documentation and policies may change;
+      recheck contribution instructions and tool requirements when you use them.
+    </p>
+    <p>
+      The daily schedule, exercises, timing and website requirements are original recommendations. The <a href={url('resources/')}>linked
+      references</a> ground the technical workflow and reading assignments. Book readings map to <em>Learn LLVM 17, Second Edition</em>{' '}
+      by Kai Nacke and Amy Kwan; this site links to the book and does not reproduce it. No page numbers are given on purpose.
+    </p>
+
+    <h2 id="independent">Independent project</h2>
+    <p>
+      This is an independent personal study project. It is not affiliated with, sponsored by or endorsed by the LLVM project, the LLVM
+      Foundation, Packt Publishing, the book’s authors or the author of Crafting Interpreters. Product names belong to their owners.
+    </p>
+    <p>
+      Nothing on this site records completed learning or contributions on anyone’s behalf. Progress you check off stays in your own
+      browser. Contribution status should always be recorded as it actually stands: submitted, under review, merged or closed.
+    </p>
+
+    <h2 id="privacy">Privacy</h2>
+    <p>
+      The site is static. There are no accounts, analytics, cookies or server-side storage. Notes and progress use your browser’s local
+      storage; see <a href={url('notes/')}>Notes</a> for export, import and reset.
+    </p>
+  </div>
+</Base>

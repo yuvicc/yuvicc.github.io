@@ -1,0 +1,39 @@
+day: 7
+slug: "07"
+title: Consolidate the compiler foundations
+phase: foundations
+toolchain: both
+checkpoint: A
+prerequisites:
+  - 6
+minutes:
+  reading: 30
+  practice: 90
+  verification: 20
+  notes: 10
+goals:
+  - Review and catch-up checkpoint with no new language features.
+reading:
+  - resourceId: R1
+    section: Reread only the confusing parts of chapters 2 and 3
+    minutes: 30
+    upTo: true
+steps:
+  - Run the test suite from a clean build.
+  - Explain the path from input text to evaluated result without looking at the implementation.
+  - Finish the Clang build if needed; otherwise record the first build blocker and a specific recovery step.
+deliverable: "Checkpoint A: a tested expression frontend and a one-page explanation. If parsing or name resolution is unclear, repeat days 4–6 before continuing."
+checks:
+  - id: day-07-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-07-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-07-done
+    label: "Done when: Checkpoint A: a tested expression frontend and a one-page explanation. If parsing or name resolution is unclear, repeat days 4–6 before continuing."
+    required: true
+  - id: day-07-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Where should each of your three error examples be detected?

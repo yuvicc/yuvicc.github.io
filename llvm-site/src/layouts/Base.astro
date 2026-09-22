@@ -1,0 +1,105 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import { SITE_TITLE, SITE_DESCRIPTION, CURRICULUM_VERSION, url } from '../data/site.ts';
+import { STORAGE_KEY, type Manifest } from '../lib/progress.ts';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Top-level nav section to mark as current. */
+  section?: 'home' | 'roadmap' | 'days' | 'resources' | 'setup' | 'contributing' | 'notes' | 'about';
+}
+
+const { title, description = SITE_DESCRIPTION, section } = Astro.props;
+const pageTitle = section === 'home' ? SITE_TITLE : `${title} · ${SITE_TITLE}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const days = (await getCollection('days')).map((e) => e.data).sort((a, b) => a.day - b.day);
+const manifest: Manifest = {
+  curriculumVersion: CURRICULUM_VERSION,
+  days: days.map((d) => ({
+    day: d.day,
+    slug: d.slug,
+    title: d.title,
+    phase: d.phase,
+    required: d.checks.filter((c) => c.required).map((c) => c.id),
+    optional: d.checks.filter((c) => !c.required).map((c) => c.id),
+  })),
+};
+
+const nav = [
+  { id: 'roadmap', label: 'Roadmap', href: url('roadmap/') },
+  { id: 'resources', label: 'Resources', href: url('resources/') },
+  { id: 'setup', label: 'Setup', href: url('setup/') },
+  { id: 'contributing', label: 'Contributing', href: url('contributing/') },
+  { id: 'notes', label: 'Notes', href: url('notes/') },
+  { id: 'about', label: 'About', href: url('about/') },
+];
+---
+
+<!doctype html>
+<html lang="en" data-base={url()} data-storage-key={STORAGE_KEY}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href={url('sitemap-index.xml')} />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <script is:inline define:vars={{ key: STORAGE_KEY }}>
+      // Runs before paint: mark JS as available and apply a saved theme choice.
+      document.documentElement.classList.add('js');
+      try {
+        const t = JSON.parse(localStorage.getItem(key) || 'null')?.settings?.theme;
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="inner">
+        <a class="brand" href={url()}>{SITE_TITLE}</a>
+        <nav class="site-nav" aria-label="Main">
+          <ul>
+            {
+              nav.map((item) => (
+                <li>
+                  <a href={item.href} aria-current={section === item.id ? 'page' : undefined}>
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+        <button type="button" class="js-only theme-toggle" data-theme-toggle aria-label="Theme: system. Change theme">
+          Theme: <span data-theme-label>System</span>
+        </button>
+      </div>
+    </header>
+    <main id="main" class="wrap" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="inner">
+        <p>
+          An independent personal study project. Not affiliated with or endorsed by the LLVM project, the LLVM Foundation, Packt
+          or the book’s authors. <a href={url('about/')}>About this site</a> · <a href="/">yuvicc.dev</a>
+        </p>
+      </div>
+    </footer>
+    <div class="visually-hidden" role="status" aria-live="polite" data-announcer></div>
+    <script type="application/json" id="curriculum-manifest" set:html={JSON.stringify(manifest).replace(/</g, "\\u003c")} />
+    <script>
+      import '../scripts/app.ts';
+    </script>
+  </body>
+</html>

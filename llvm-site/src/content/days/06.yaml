@@ -1,0 +1,38 @@
+day: 6
+slug: "06"
+title: Check meaning before generating code
+phase: foundations
+toolchain: host
+prerequisites:
+  - 5
+minutes:
+  reading: 40
+  practice: 80
+  verification: 20
+  notes: 10
+goals:
+  - Symbol tables, name resolution, scopes and semantic errors.
+reading:
+  - resourceId: R1
+    section: "Chapter 2: semantic analysis; chapter 3: names and semantic checking"
+    minutes: 40
+steps:
+  - Resolve names in a single scope.
+  - Reject unknown names and duplicate let declarations.
+  - Evaluate valid integer ASTs in a small interpreter.
+  - Define the toy integer domain as unsigned 32-bit values with wraparound; omit division for now.
+deliverable: Separate lexer, parser and semantic failures, with one example of each; 2 + 3 * 4 evaluates to 14.
+checks:
+  - id: day-06-read
+    label: Finished the reading assignments
+    required: true
+  - id: day-06-lab
+    label: Worked through the build or investigation steps
+    required: true
+  - id: day-06-done
+    label: "Done when: Separate lexer, parser and semantic failures, with one example of each; 2 + 3 * 4 evaluates to 14."
+    required: true
+  - id: day-06-recall
+    label: Answered the recall question in my own words
+    required: true
+recallQuestion: Why can x + 1 be syntactically correct but semantically invalid?
